@@ -141,6 +141,25 @@
     margin-top: 15px;
 }
 
+.message-content {
+    white-space: pre-line;
+}
+
+.recommendation-button {
+    display: inline-block;
+    padding: 11px 16px;
+    background-color: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.recommendation-button:hover {
+    background-color: #1d4ed8;
+}
+
 @media (max-width: 600px) {
     .assistant-page {
         margin-top: 25px;
