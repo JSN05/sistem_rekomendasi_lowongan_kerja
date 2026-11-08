@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lowongan</title>
+    <link rel="stylesheet" href="css/all.css">
+    <link rel="stylesheet" href="css/lowongan.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Cari Kerja</div>
+
+        <ul class="nav-menu">
+            <li><a href="beranda.html">Beranda</a></li>
+            <li><a href="asisten.html">Asisten AI</a></li>
+            <li><a href="lowongan.html" class="active">Lowongan</a></li>
+            <li><a href="rekomendasi.html">Rekomendasi</a></li>
+        </ul>
+    </nav>
+
+    <main class="job-page">
+        <section class="job-heading">
+            <h1>Daftar Lowongan Pekerjaan</h1>
+            <p>
+                Temukan berbagai lowongan pekerjaan di bidang
+                penjualan dan bisnis yang sesuai dengan minat kamu.
+            </p>
+        </section>
+
+        <section class="job-search">
+            <div class="search-box">
+                <input
+                    type="text"
+                    placeholder="Cari posisi atau nama perusahaan..."
+                >
+                <button type="button">Cari</button>
+            </div>
+
+            <div class="filter-box">
+                <select>
+                    <option value="">Lokasi</option>
+                    <option value="jakarta">Jakarta</option>
+                    <option value="bandung">Bandung</option>
+                    <option value="surabaya">Surabaya</option>
+                </select>
+
+                <select>
+                    <option value="">Pendidikan</option>
+                    <option value="smp/mts/sederajat">Minimal SMP/MTS/Sederajat</option>
+                    <option value="sma/smk/sederajat">Minimal SMA/SMK/Sederajat</option>
+                    <option value="s1">Minimal S1</option>
+                    <option value="d3/d4">Minimal D3/D4</option>
+                    <option value="semua jenjang">Semua Jenjang</option>
+                </select>
+
+                <select>
+                    <option value="">Tipe Pekerjaan</option>
+                    <option value="full time">Full-Time</option>
+                    <option value="part time">Part-Time</option>
+                    <option value="kontrak">Kontrak</option>
+                    <option value="magang">Magang</option>
+                    <option value="freelance">Freelance</option>
+                </select>
+
+                <input
+                    type="number"
+                    placeholder="Pengalaman (tahun)"
+                    min="0"
+                >
+
+                <input
+                    type="number"
+                    placeholder="Gaji minimum (Rp)"
+                    min="0"
+                >
+
+                <select>
+                    <option value="">Jenis Kelamin</option>
+                    <option value="laki laki">Laki-laki</option>
+                    <option value="perempuan">Perempuan</option>
+                    <option value="semua jenis kelamin">Semua Jenis Kelamin</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="job-list">
+            <div class="job-list-heading">
+                <h2>Lowongan Tersedia</h2>
+                <p>Menampilkan beberapa contoh lowongan pekerjaan.</p>
+            </div>
+
+            <div class="job-container">
+                <div class="job-card">
+                    <div class="job-card-header">
+                        <h3>Sales Executive</h3>
+                        <span class="job-type">Full Time</span>
+                    </div>
+
+                    <p class="company-name">PT Maju Bersama</p>
+
+                    <div class="job-info">
+                        <span>Jakarta Selatan</span>
+                        <span>SMA/SMK</span>
+                        <span>Pengalaman 1 Tahun</span>
+                    </div>
+
+                    <p class="job-salary">Rp5.000.000 - Rp7.000.000</p>
+
+                    <a href="#" class="job-button">Lihat Detail</a>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-card-header">
+                        <h3>Business Development</h3>
+                        <span class="job-type">Full Time</span>
+                    </div>
+
+                    <p class="company-name">PT Digital Nusantara</p>
+
+                    <div class="job-info">
+                        <span>Jakarta Pusat</span>
+                        <span>S1</span>
+                        <span>Pengalaman 2 Tahun</span>
+                    </div>
+
+                    <p class="job-salary">Rp7.000.000 - Rp10.000.000</p>
+
+                    <a href="#" class="job-button">Lihat Detail</a>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-card-header">
+                        <h3>Marketing Staff</h3>
+                        <span class="job-type">Kontrak</span>
+                    </div>
+
+                    <p class="company-name">PT Kreatif Indonesia</p>
+
+                    <div class="job-info">
+                        <span>Bandung</span>
+                        <span>D3/S1</span>
+                        <span>Fresh Graduate</span>
+                    </div>
+
+                    <p class="job-salary">Rp4.000.000 - Rp5.500.000</p>
+
+                    <a href="#" class="job-button">Lihat Detail</a>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-card-header">
+                        <h3>Account Executive</h3>
+                        <span class="job-type">Full Time</span>
+                    </div>
+
+                    <p class="company-name">PT Solusi Bisnis</p>
+
+                    <div class="job-info">
+                        <span>Surabaya</span>
+                        <span>S1</span>
+                        <span>Pengalaman 1 Tahun</span>
+                    </div>
+
+                    <p class="job-salary">Rp5.500.000 - Rp8.000.000</p>
+
+                    <a href="#" class="job-button">Lihat Detail</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>
+            &copy; 2026 Sistem Rekomendasi Lowongan Kerja.
+            All Rights Reserved.
+        </p>
+    </footer>
+</body>
+</html>
