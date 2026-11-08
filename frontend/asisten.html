@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asisten</title>
+    <link rel="stylesheet" href="css/all.css">
+    <link rel="stylesheet" href="css/asisten.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Cari Kerja</div>
+
+        <ul class="nav-menu">
+            <li><a href="beranda.html">Beranda</a></li>
+            <li><a href="asisten.html" class="active">Asisten AI</a></li>
+            <li><a href="lowongan.html">Lowongan</a></li>
+            <li><a href="rekomendasi.html">Rekomendasi</a></li>
+        </ul>
+    </nav>
+
+    <main class="assistant-page">
+        <div class="assistant-heading">
+            <h1>Asisten Pencarian Kerja</h1>
+            <p>
+                Ceritakan pekerjaan yang kamu cari. Asisten akan membantu
+                menemukan lowongan yang sesuai dengan kriteria kamu.
+            </p>
+        </div>
+
+        <section class="chat-container">
+            <div class="chat-header">
+                <div class="assistant-avatar">AI</div>
+                <div>
+                    <h3>Asisten AI</h3>
+                    <span class="assistant-status">Siap membantu</span>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai-message">
+                    <div class="message-avatar">AI</div>
+                    <div class="message-content">
+                        Halo! Selamat datang di Asisten Pencarian Kerja.
+                        <br><br>
+                        Saya bisa membantu kamu mencari lowongan kerja
+                        di bidang penjualan dan bisnis.
+                        <br><br>
+                        Pekerjaan seperti apa yang sedang kamu cari?
+                        Misalnya, sales, marketing, atau business development.
+                    </div>
+                </div>
+            </div>
+
+            <form class="chat-input-area" id="chatForm">
+                <input
+                    type="text"
+                    id="userInput"
+                    placeholder="Ketik pesan kamu di sini..."
+                    autocomplete="off"
+                    required
+                >
+                <button type="submit">Kirim</button>
+            </form>
+        </section>
+
+        <p class="assistant-note">
+            Asisten ini masih dalam tahap pengembangan.
+        </p>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
