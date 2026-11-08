@@ -33,35 +33,37 @@
             <div class="search-box">
                 <input
                     type="text"
+                    id="searchInput"
                     placeholder="Cari posisi atau nama perusahaan..."
                 >
-                <button type="button">Cari</button>
+                <button type="button" id="searchButton">Cari</button>
             </div>
 
             <div class="filter-box">
-                <select>
+                <select id="locationFilter">
                     <option value="">Lokasi</option>
                     <option value="jakarta">Jakarta</option>
                     <option value="bandung">Bandung</option>
                     <option value="surabaya">Surabaya</option>
                 </select>
 
-                <select>
+                <select id="educationFilter">
                     <option value="">Pendidikan</option>
                     <option value="smp/mts/sederajat">Minimal SMP/MTS/Sederajat</option>
                     <option value="sma/smk/sederajat">Minimal SMA/SMK/Sederajat</option>
-                    <option value="s1">Minimal S1</option>
                     <option value="d3/d4">Minimal D3/D4</option>
+                    <option value="s1">Minimal S1</option>
                     <option value="semua jenjang">Semua Jenjang</option>
                 </select>
 
                 <input
                     type="number"
+                    id="experienceFilter"
                     placeholder="Pengalaman (tahun)"
                     min="0"
                 >
 
-                <select>
+                <select id="jobTypeFilter">
                     <option value="">Tipe Pekerjaan</option>
                     <option value="full time">Full-Time</option>
                     <option value="part time">Part-Time</option>
@@ -72,16 +74,21 @@
 
                 <input
                     type="number"
+                    id="salaryFilter"
                     placeholder="Gaji minimum (Rp)"
                     min="0"
                 >
 
-                <select>
+                <select id="genderFilter">
                     <option value="">Jenis Kelamin</option>
                     <option value="laki laki">Laki-laki</option>
                     <option value="perempuan">Perempuan</option>
                     <option value="semua jenis kelamin">Semua Jenis Kelamin</option>
                 </select>
+            </div>
+
+            <div class="filter-actions">
+                <button type="button" id="resetButton">Reset Filter</button>
             </div>
         </section>
 
@@ -91,8 +98,19 @@
                 <p>Menampilkan beberapa contoh lowongan pekerjaan.</p>
             </div>
 
+            <p id="noResults" class="no-results" style="display: none;">
+                Tidak ada lowongan yang sesuai dengan kriteria pencarian Anda.
+            </p>
+
             <div class="job-container">
-                <div class="job-card">
+                <div class="job-card"
+                    data-location="jakarta"
+                    data-education="sma/smk/sederajat"
+                    data-job-type="full time"
+                    data-experience="1"
+                    data-salary-min="5000000"
+                    data-salary-max="7000000"
+                    data-gender="semua jenis kelamin">
                     <div class="job-card-header">
                         <h3>Sales Executive</h3>
                         <span class="job-type">Full Time</span>
@@ -111,7 +129,14 @@
                     <a href="detail.html" class="job-button">Lihat Detail</a>
                 </div>
 
-                <div class="job-card">
+                <div class="job-card"
+                    data-location="jakarta"
+                    data-education="s1"
+                    data-job-type="full time"
+                    data-experience="2"
+                    data-salary-min="7000000"
+                    data-salary-max="10000000"
+                    data-gender="semua jenis kelamin">
                     <div class="job-card-header">
                         <h3>Business Development</h3>
                         <span class="job-type">Full Time</span>
@@ -130,7 +155,14 @@
                     <a href="detail.html" class="job-button">Lihat Detail</a>
                 </div>
 
-                <div class="job-card">
+                <div class="job-card"
+                    data-location="bandung"
+                    data-education="d3/d4"
+                    data-job-type="kontrak"
+                    data-experience="0"
+                    data-salary-min="4000000"
+                    data-salary-max="5500000"
+                    data-gender="semua jenis kelamin">
                     <div class="job-card-header">
                         <h3>Marketing Staff</h3>
                         <span class="job-type">Kontrak</span>
@@ -149,7 +181,14 @@
                     <a href="detail.html" class="job-button">Lihat Detail</a>
                 </div>
 
-                <div class="job-card">
+                <div class="job-card"
+                    data-location="surabaya"
+                    data-education="s1"
+                    data-job-type="full time"
+                    data-experience="1"
+                    data-salary-min="5500000"
+                    data-salary-max="8000000"
+                    data-gender="semua jenis kelamin">
                     <div class="job-card-header">
                         <h3>Account Executive</h3>
                         <span class="job-type">Full Time</span>
@@ -177,5 +216,7 @@
             All Rights Reserved.
         </p>
     </footer>
+
+    <script src="javascript/lowongan.js"></script>
 </body>
 </html>
