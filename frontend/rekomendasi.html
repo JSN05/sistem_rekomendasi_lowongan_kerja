@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -38,37 +37,37 @@
             <div class="criteria-container">
                 <div class="criteria-item">
                     <span>Posisi</span>
-                    <strong>Sales</strong>
+                    <strong id="criteriaPosition">-</strong>
                 </div>
 
                 <div class="criteria-item">
                     <span>Lokasi</span>
-                    <strong>Jakarta</strong>
+                    <strong id="criteriaLocation">-</strong>
                 </div>
 
                 <div class="criteria-item">
                     <span>Pendidikan</span>
-                    <strong>SMA/SMK/Sederajat</strong>
+                    <strong id="criteriaEducation">-</strong>
                 </div>
 
                 <div class="criteria-item">
                     <span>Pengalaman</span>
-                    <strong>0 Tahun</strong>
+                    <strong id="criteriaExperience">-</strong>
                 </div>
 
                 <div class="criteria-item">
                     <span>Tipe Pekerjaan</span>
-                    <strong>Full-Time</strong>
+                    <strong id="criteriaJobType">-</strong>
                 </div>
 
                 <div class="criteria-item">
                     <span>Gaji Minimum</span>
-                    <strong>Rp5.000.000</strong>
+                    <strong id="criteriaSalary">-</strong>
                 </div>
 
                 <div class="criteria-item">
                     <span>Jenis Kelamin</span>
-                    <strong>Semua</strong>
+                    <strong id="criteriaGender">-</strong>
                 </div>
             </div>
         </section>
@@ -76,82 +75,13 @@
         <section class="recommendation-list">
             <div class="recommendation-list-heading">
                 <h2>Hasil Rekomendasi</h2>
-                <p>Berikut beberapa pekerjaan yang sesuai dengan kriteria Anda.</p>
+                <p id="recommendationDescription">
+                    Berikut beberapa pekerjaan yang sesuai dengan kriteria Anda.
+                </p>
             </div>
 
-            <div class="recommendation-container">
-                <div class="recommendation-card">
-                    <div class="recommendation-card-header">
-                        <div>
-                            <h3>Sales Executive</h3>
-                            <p class="company-name">PT Maju Bersama</p>
-                        </div>
-
-                        <div class="match-score">
-                            <strong>95%</strong>
-                            <span>Kecocokan</span>
-                        </div>
-                    </div>
-
-                    <div class="job-info">
-                        <span>Jakarta Selatan</span>
-                        <span>SMA/SMK/Sederajat</span>
-                        <span>Full-Time</span>
-                    </div>
-
-                    <p class="job-salary">
-                        Rp5.000.000 - Rp7.000.000
-                    </p>
-
-                    <div class="match-reason">
-                        <strong>Alasan Rekomendasi:</strong>
-                        <p>
-                            Posisi, lokasi, pendidikan, dan tipe pekerjaan
-                            sesuai dengan kriteria pencarian Anda.
-                        </p>
-                    </div>
-
-                    <a href="lowongan.html" class="job-button">
-                        Lihat Lowongan
-                    </a>
-                </div>
-
-                <div class="recommendation-card">
-                    <div class="recommendation-card-header">
-                        <div>
-                            <h3>Sales Representative</h3>
-                            <p class="company-name">PT Sukses Indonesia</p>
-                        </div>
-
-                        <div class="match-score">
-                            <strong>85%</strong>
-                            <span>Kecocokan</span>
-                        </div>
-                    </div>
-
-                    <div class="job-info">
-                        <span>Jakarta Barat</span>
-                        <span>SMA/SMK/Sederajat</span>
-                        <span>Full-Time</span>
-                    </div>
-
-                    <p class="job-salary">
-                        Rp4.500.000 - Rp6.000.000
-                    </p>
-
-                    <div class="match-reason">
-                        <strong>Alasan Rekomendasi:</strong>
-                        <p>
-                            Posisi, lokasi, dan pendidikan sesuai.
-                            Namun, gaji yang ditawarkan belum sepenuhnya
-                            memenuhi kriteria minimum.
-                        </p>
-                    </div>
-
-                    <a href="lowongan.html" class="job-button">
-                        Lihat Lowongan
-                    </a>
-                </div>
+            <div class="recommendation-container" id="recommendationContainer">
+                <!-- Hasil rekomendasi ditampilkan melalui JavaScript -->
             </div>
         </section>
     </main>
@@ -162,5 +92,7 @@
             All Rights Reserved.
         </p>
     </footer>
+
+    <script src="javascript/rekomendasi.js"></script>
 </body>
 </html>
