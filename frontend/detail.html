@@ -28,123 +28,99 @@
 
         <section class="detail-header">
             <div class="detail-title">
-                <h1>Sales Executive</h1>
-                <p class="detail-company">PT Maju Bersama</p>
+                <h1 id="jobTitle">Memuat Lowongan...</h1>
+                <p class="detail-company" id="companyName"></p>
+
                 <div class="detail-tags">
-                    <span>Full-Time</span>
-                    <span>Jakarta Selatan</span>
+                    <span id="jobTypeTag"></span>
+                    <span id="locationTag"></span>
                 </div>
             </div>
 
             <div class="detail-salary">
                 <span>Rentang Gaji</span>
-                <h2>Rp5.000.000 - Rp7.000.000</h2>
+                <h2 id="salaryHeader"></h2>
             </div>
         </section>
 
         <div class="detail-content">
             <section class="detail-main">
+
                 <div class="detail-section">
                     <h2>Informasi Pekerjaan</h2>
 
                     <div class="job-information">
                         <div class="information-item">
                             <span>Lokasi</span>
-                            <strong>Jakarta Selatan</strong>
+                            <strong id="jobLocation"></strong>
                         </div>
 
                         <div class="information-item">
                             <span>Pendidikan</span>
-                            <strong>SMA/SMK/Sederajat</strong>
+                            <strong id="jobEducation"></strong>
                         </div>
 
                         <div class="information-item">
                             <span>Pengalaman</span>
-                            <strong>Minimal 1 Tahun</strong>
+                            <strong id="jobExperience"></strong>
                         </div>
 
                         <div class="information-item">
                             <span>Tipe Pekerjaan</span>
-                            <strong>Full-Time</strong>
+                            <strong id="jobType"></strong>
                         </div>
 
                         <div class="information-item">
                             <span>Jenis Kelamin</span>
-                            <strong>Semua Jenis Kelamin</strong>
+                            <strong id="jobGender"></strong>
                         </div>
 
                         <div class="information-item">
                             <span>Gaji</span>
-                            <strong>Rp5.000.000 - Rp7.000.000</strong>
+                            <strong id="jobSalary"></strong>
                         </div>
                     </div>
                 </div>
 
                 <div class="detail-section">
                     <h2>Deskripsi Pekerjaan</h2>
-
-                    <p>
-                        PT Maju Bersama sedang mencari kandidat untuk
-                        posisi Sales Executive yang bertanggung jawab
-                        dalam menawarkan produk dan layanan perusahaan
-                        kepada calon pelanggan.
-                    </p>
-
-                    <p>
-                        Kandidat diharapkan mampu membangun hubungan
-                        baik dengan pelanggan, memahami kebutuhan pasar,
-                        serta membantu perusahaan mencapai target
-                        penjualan yang telah ditentukan.
-                    </p>
+                    <div id="jobDescription"></div>
                 </div>
 
                 <div class="detail-section">
                     <h2>Persyaratan Pekerjaan</h2>
-
-                    <ul class="requirement-list">
-                        <li>Pendidikan minimal SMA/SMK/Sederajat.</li>
-                        <li>Memiliki pengalaman di bidang penjualan minimal 1 tahun.</li>
-                        <li>Memiliki kemampuan komunikasi yang baik.</li>
-                        <li>Mampu bekerja secara individu maupun tim.</li>
-                        <li>Mampu bekerja dengan target penjualan.</li>
-                        <li>Memiliki motivasi dan tanggung jawab yang tinggi.</li>
-                    </ul>
+                    <ul class="requirement-list" id="jobRequirements"></ul>
                 </div>
 
                 <div class="detail-section">
                     <h2>Tentang Perusahaan</h2>
-
-                    <p>
-                        PT Maju Bersama merupakan perusahaan yang
-                        bergerak di bidang penjualan dan distribusi
-                        produk. Perusahaan berfokus pada pengembangan
-                        pasar dan pelayanan kepada pelanggan.
-                    </p>
+                    <p id="companyDescription"></p>
                 </div>
 
             </section>
+
             <aside class="detail-sidebar">
                 <div class="sidebar-card">
                     <h3>Informasi Lowongan</h3>
 
                     <div class="sidebar-information">
                         <span>Perusahaan</span>
-                        <strong>PT Maju Bersama</strong>
+                        <strong id="sidebarCompany"></strong>
                     </div>
 
                     <div class="sidebar-information">
                         <span>Posisi</span>
-                        <strong>Sales Executive</strong>
+                        <strong id="sidebarPosition"></strong>
                     </div>
 
                     <div class="sidebar-information">
                         <span>Lokasi</span>
-                        <strong>Jakarta Selatan</strong>
+                        <strong id="sidebarLocation"></strong>
                     </div>
 
                     <div class="sidebar-information">
                         <span>Tipe Pekerjaan</span>
-                        <strong>Full-Time</strong>
+                        <strong id="sidebarJobType"></strong>
                     </div>
 
                     <a href="lowongan.html" class="back-link">
@@ -161,5 +137,7 @@
             All Rights Reserved.
         </p>
     </footer>
+
+    <script src="javascript/detail.js"></script>
 </body>
 </html>

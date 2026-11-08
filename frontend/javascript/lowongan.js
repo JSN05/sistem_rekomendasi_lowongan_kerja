@@ -1,8 +1,4 @@
-
- // ======================================
- // MENGAMBIL ELEMEN HTML
- // ======================================
-console.log("JavaScript Lowongan berhasil dimuat!");
+// MENGAMBIL ELEMEN HTML
 const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchButton");
 
@@ -18,18 +14,12 @@ const resetButton = document.getElementById("resetButton");
 const jobCards = document.querySelectorAll(".job-card");
 const noResults = document.getElementById("noResults");
 
-// ======================================
 // FUNGSI NORMALISASI TEKS
-// ======================================
-
 function normalizeText(text) {
     return text.toLowerCase().trim().replace(/\s+/g, " ");
 }
 
-// ======================================
 // FUNGSI MENGUBAH PENDIDIKAN KE LEVEL
-// ======================================
-
 function getEducationLevel(education) {
     const value = normalizeText(education);
 
@@ -41,10 +31,7 @@ function getEducationLevel(education) {
     return 0;
 }
 
-// ======================================
 // FUNGSI FILTER LOWONGAN
-// ======================================
-
 function filterJobs() {
     const searchValue = normalizeText(searchInput.value);
 
@@ -139,10 +126,7 @@ function filterJobs() {
     noResults.style.display = visibleJobs === 0 ? "block" : "none";
 }
 
-// ======================================
 // TOMBOL CARI
-// ======================================
-
 searchButton.addEventListener("click", function() {
     filterJobs();
 });
@@ -150,10 +134,7 @@ searchButton.addEventListener("click", function() {
 // Pencarian langsung saat mengetik
 searchInput.addEventListener("input", filterJobs);
 
-// ======================================
 // EVENT LISTENER FILTER
-// ======================================
-
 locationFilter.addEventListener("change", filterJobs);
 educationFilter.addEventListener("change", filterJobs);
 experienceFilter.addEventListener("input", filterJobs);
@@ -161,10 +142,7 @@ jobTypeFilter.addEventListener("change", filterJobs);
 salaryFilter.addEventListener("input", filterJobs);
 genderFilter.addEventListener("change", filterJobs);
 
-// ======================================
 // TOMBOL RESET FILTER
-// ======================================
-
 resetButton.addEventListener("click", function() {
     // Mengosongkan pencarian
     searchInput.value = "";
@@ -181,8 +159,5 @@ resetButton.addEventListener("click", function() {
     filterJobs();
 });
 
-// ======================================
 // MENJALANKAN FILTER SAAT HALAMAN DIBUKA
-// ======================================
-
 filterJobs();
