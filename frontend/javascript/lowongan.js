@@ -1,4 +1,3 @@
-// MENGAMBIL ELEMEN HTML
 const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchButton");
 
@@ -8,156 +7,142 @@ const experienceFilter = document.getElementById("experienceFilter");
 const jobTypeFilter = document.getElementById("jobTypeFilter");
 const salaryFilter = document.getElementById("salaryFilter");
 const genderFilter = document.getElementById("genderFilter");
-
 const resetButton = document.getElementById("resetButton");
 
-const jobCards = document.querySelectorAll(".job-card");
+const jobContainer = document.getElementById("jobContainer");
 const noResults = document.getElementById("noResults");
+const resultInfo = document.getElementById("resultInfo");
+const pagination = document.getElementById("pagination");
 
-// FUNGSI NORMALISASI TEKS
-function normalizeText(text) {
-    return text.toLowerCase().trim().replace(/\s+/g, " ");
+const PAGE_SIZE = 12;
+let currentPage = 1;
+let requestCounter = 0;   // mengabaikan respons lama jika filter berubah cepat
+
+function createJobCard(job) {
+    const card = document.createElement("div");
+    card.className = "job-card";
+
+    card.innerHTML = `
+        <div class="job-card-header">
+            <h3>${escapeHtml(job.title)}</h3>
+            <span class="job-type">${escapeHtml(job.jobType || "-")}</span>
+        </div>
+
+        <p class="company-name">${escapeHtml(job.company)}</p>
+
+        <div class="job-info">
+            <span>${escapeHtml(job.location || "-")}</span>
+            <span>${escapeHtml(job.education || "-")}</span>
+            <span>${escapeHtml(formatExperience(job))}</span>
+        </div>
+
+        <p class="job-salary">${escapeHtml(formatSalary(job.salaryMin, job.salaryMax))}</p>
+
+        <a href="detail.html?id=${encodeURIComponent(job.id)}" class="job-button">Lihat Detail</a>
+    `;
+    return card;
 }
 
-// FUNGSI MENGUBAH PENDIDIKAN KE LEVEL
-function getEducationLevel(education) {
-    const value = normalizeText(education);
+function renderPagination(data) {
+    pagination.innerHTML = "";
+    if (data.totalPages <= 1) return;
 
-    if (value.includes("smp") || value.includes("mts")) return 1;
-    if (value.includes("sma") || value.includes("smk")) return 2;
-    if (value.includes("d3") || value.includes("d4")) return 3;
-    if (value.includes("s1")) return 4;
+    const prev = document.createElement("button");
+    prev.textContent = "Sebelumnya";
+    prev.disabled = data.page <= 1;
+    prev.addEventListener("click", () => loadJobs(data.page - 1));
 
-    return 0;
+    const info = document.createElement("span");
+    info.textContent = `Halaman ${data.page} dari ${data.totalPages}`;
+
+    const next = document.createElement("button");
+    next.textContent = "Berikutnya";
+    next.disabled = data.page >= data.totalPages;
+    next.addEventListener("click", () => loadJobs(data.page + 1));
+
+    pagination.append(prev, info, next);
 }
 
-// FUNGSI FILTER LOWONGAN
-function filterJobs() {
-    const searchValue = normalizeText(searchInput.value);
+async function loadJobs(page = 1) {
+    currentPage = page;
+    const requestId = ++requestCounter;
 
-    const locationValue = normalizeText(locationFilter.value);
-    const educationValue = normalizeText(educationFilter.value);
-    const jobTypeValue = normalizeText(jobTypeFilter.value);
-    const genderValue = normalizeText(genderFilter.value);
+    try {
+        const data = await apiGet("/api/jobs", {
+            q: searchInput.value.trim(),
+            location: locationFilter.value,
+            education: educationFilter.value,
+            experience: experienceFilter.value,
+            job_type: jobTypeFilter.value,
+            salary_min: salaryFilter.value,
+            gender: genderFilter.value,
+            page: currentPage,
+            page_size: PAGE_SIZE
+        });
 
-    const experienceValue = experienceFilter.value;
-    const salaryValue = salaryFilter.value;
+        if (requestId !== requestCounter) return;
 
-    let visibleJobs = 0;
+        jobContainer.innerHTML = "";
+        data.items.forEach(job => jobContainer.appendChild(createJobCard(job)));
 
-    jobCards.forEach(function(card) {
+        noResults.style.display = data.total === 0 ? "block" : "none";
+        noResults.textContent = "Tidak ada lowongan yang sesuai dengan kriteria pencarian Anda.";
+        resultInfo.textContent = `Menampilkan ${data.items.length} dari ${data.total} lowongan.`;
+        renderPagination(data);
+    } catch (error) {
+        if (requestId !== requestCounter) return;
+        jobContainer.innerHTML = "";
+        pagination.innerHTML = "";
+        noResults.style.display = "block";
+        noResults.textContent = error.message;
+        resultInfo.textContent = "";
+    }
+}
 
-        // Mengambil informasi dari atribut data-* HTML
-        const title = normalizeText(card.querySelector("h3").textContent);
-        const company = normalizeText(card.querySelector(".company-name").textContent);
+// Mengisi pilihan lokasi dari data lowongan yang ada di backend
+async function loadLocationOptions() {
+    try {
+        const meta = await apiGet("/api/meta");
+        meta.locations.forEach(loc => {
+            const option = document.createElement("option");
+            option.value = loc.value;
+            option.textContent = `${loc.label} (${loc.count})`;
+            locationFilter.appendChild(option);
+        });
+    } catch (error) {
+        // filter lokasi tetap kosong; daftar lowongan akan menampilkan pesan kesalahan
+    }
+}
 
-        const location = normalizeText(card.dataset.location);
-        const education = normalizeText(card.dataset.education);
-        const jobType = normalizeText(card.dataset.jobType);
-        const gender = normalizeText(card.dataset.gender);
+// Pencarian langsung saat mengetik (ditunda sebentar agar tidak membanjiri server)
+let searchTimer = null;
+searchInput.addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => loadJobs(1), 300);
+});
+searchButton.addEventListener("click", () => loadJobs(1));
 
-        const requiredExperience = Number(card.dataset.experience);
-        const maximumSalary = Number(card.dataset.salaryMax);
+[locationFilter, educationFilter, jobTypeFilter, genderFilter].forEach(el =>
+    el.addEventListener("change", () => loadJobs(1)));
 
-        // 1. Pencarian berdasarkan posisi atau perusahaan
-        const matchesSearch =
-            searchValue === "" ||
-            title.includes(searchValue) ||
-            company.includes(searchValue);
-
-        // 2. Filter lokasi
-        const matchesLocation =
-            locationValue === "" ||
-            location.includes(locationValue);
-
-        // 3. Filter pendidikan
-        let matchesEducation = true;
-
-        if (educationValue !== "" && educationValue !== "semua jenjang") {
-            const selectedEducationLevel = getEducationLevel(educationValue);
-            const requiredEducationLevel = getEducationLevel(education);
-
-            matchesEducation =
-                selectedEducationLevel >= requiredEducationLevel;
-        }
-
-        // 4. Filter pengalaman
-        const matchesExperience =
-            experienceValue === "" ||
-            Number(experienceValue) >= requiredExperience;
-
-        // 5. Filter tipe pekerjaan
-        const matchesJobType =
-            jobTypeValue === "" ||
-            jobType === jobTypeValue;
-
-        // 6. Filter gaji minimum
-        const matchesSalary =
-            salaryValue === "" ||
-            maximumSalary >= Number(salaryValue);
-
-        // 7. Filter jenis kelamin
-        const matchesGender =
-            genderValue === "" ||
-            genderValue === "semua jenis kelamin" ||
-            gender === "semua jenis kelamin" ||
-            gender === genderValue;
-
-        // Menggabungkan semua kriteria
-        const isMatch =
-            matchesSearch &&
-            matchesLocation &&
-            matchesEducation &&
-            matchesExperience &&
-            matchesJobType &&
-            matchesSalary &&
-            matchesGender;
-
-        // Menampilkan atau menyembunyikan kartu
-        if (isMatch) {
-            card.style.display = "";
-            visibleJobs++;
-        } else {
-            card.style.display = "none";
-        }
+[experienceFilter, salaryFilter].forEach(el => {
+    let timer = null;
+    el.addEventListener("input", () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => loadJobs(1), 400);
     });
-
-    // Menampilkan pesan jika tidak ada hasil
-    noResults.style.display = visibleJobs === 0 ? "block" : "none";
-}
-
-// TOMBOL CARI
-searchButton.addEventListener("click", function() {
-    filterJobs();
 });
 
-// Pencarian langsung saat mengetik
-searchInput.addEventListener("input", filterJobs);
-
-// EVENT LISTENER FILTER
-locationFilter.addEventListener("change", filterJobs);
-educationFilter.addEventListener("change", filterJobs);
-experienceFilter.addEventListener("input", filterJobs);
-jobTypeFilter.addEventListener("change", filterJobs);
-salaryFilter.addEventListener("input", filterJobs);
-genderFilter.addEventListener("change", filterJobs);
-
-// TOMBOL RESET FILTER
-resetButton.addEventListener("click", function() {
-    // Mengosongkan pencarian
+resetButton.addEventListener("click", () => {
     searchInput.value = "";
-
-    // Mengembalikan semua filter ke pilihan awal
     locationFilter.value = "";
     educationFilter.value = "";
     experienceFilter.value = "";
     jobTypeFilter.value = "";
     salaryFilter.value = "";
     genderFilter.value = "";
-
-    // Menampilkan kembali seluruh lowongan
-    filterJobs();
+    loadJobs(1);
 });
 
-// MENJALANKAN FILTER SAAT HALAMAN DIBUKA
-filterJobs();
+loadLocationOptions();
+loadJobs(1);

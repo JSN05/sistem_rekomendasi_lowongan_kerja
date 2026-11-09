@@ -1,203 +1,86 @@
-// DATA DETAIL LOWONGAN
-const jobData = {
-    "sales-executive": {
-        title: "Sales Executive",
-        company: "PT Maju Bersama",
-        location: "Jakarta Selatan",
-        education: "SMA/SMK/Sederajat",
-        experience: "Minimal 1 Tahun",
-        jobType: "Full-Time",
-        gender: "Semua Jenis Kelamin",
-        salaryMin: 5000000,
-        salaryMax: 7000000,
+const jobId = new URLSearchParams(window.location.search).get("id");
 
-        description: [
-            "PT Maju Bersama sedang mencari kandidat untuk posisi Sales Executive yang bertanggung jawab dalam menawarkan produk dan layanan perusahaan kepada calon pelanggan.",
-            "Kandidat diharapkan mampu membangun hubungan baik dengan pelanggan, memahami kebutuhan pasar, serta membantu perusahaan mencapai target penjualan yang telah ditentukan."
-        ],
-
-        requirements: [
-            "Pendidikan minimal SMA/SMK/Sederajat.",
-            "Memiliki pengalaman di bidang penjualan minimal 1 tahun.",
-            "Memiliki kemampuan komunikasi yang baik.",
-            "Mampu bekerja secara individu maupun tim.",
-            "Mampu bekerja dengan target penjualan.",
-            "Memiliki motivasi dan tanggung jawab yang tinggi."
-        ],
-
-        companyDescription:
-            "PT Maju Bersama merupakan perusahaan yang bergerak di bidang penjualan dan distribusi produk. Perusahaan berfokus pada pengembangan pasar dan pelayanan kepada pelanggan."
-    },
-
-    "business-development": {
-        title: "Business Development",
-        company: "PT Digital Nusantara",
-        location: "Jakarta Pusat",
-        education: "S1",
-        experience: "Minimal 2 Tahun",
-        jobType: "Full-Time",
-        gender: "Semua Jenis Kelamin",
-        salaryMin: 7000000,
-        salaryMax: 10000000,
-
-        description: [
-            "PT Digital Nusantara membuka kesempatan untuk posisi Business Development yang bertanggung jawab mengembangkan peluang bisnis dan menjalin hubungan dengan mitra perusahaan.",
-            "Kandidat diharapkan mampu melakukan analisis pasar, mengidentifikasi peluang kerja sama, serta membantu meningkatkan pertumbuhan bisnis perusahaan."
-        ],
-
-        requirements: [
-            "Pendidikan minimal S1.",
-            "Memiliki pengalaman di bidang pengembangan bisnis minimal 2 tahun.",
-            "Memiliki kemampuan komunikasi dan negosiasi yang baik.",
-            "Mampu melakukan analisis peluang pasar.",
-            "Mampu bekerja secara individu maupun tim.",
-            "Memiliki kemampuan presentasi yang baik."
-        ],
-
-        companyDescription:
-            "PT Digital Nusantara merupakan perusahaan yang bergerak di bidang layanan dan solusi digital. Perusahaan berfokus pada pengembangan bisnis serta pemanfaatan teknologi untuk mendukung kebutuhan pelanggan."
-    },
-
-    "marketing-staff": {
-        title: "Marketing Staff",
-        company: "PT Kreatif Indonesia",
-        location: "Bandung",
-        education: "D3/D4",
-        experience: "Fresh Graduate",
-        jobType: "Kontrak",
-        gender: "Semua Jenis Kelamin",
-        salaryMin: 4000000,
-        salaryMax: 5500000,
-
-        description: [
-            "PT Kreatif Indonesia sedang mencari Marketing Staff untuk membantu pelaksanaan kegiatan pemasaran dan promosi produk perusahaan.",
-            "Kandidat akan terlibat dalam penyusunan strategi pemasaran, pengelolaan materi promosi, serta kegiatan untuk meningkatkan jangkauan pasar."
-        ],
-
-        requirements: [
-            "Pendidikan minimal D3/D4.",
-            "Terbuka untuk lulusan baru.",
-            "Memiliki minat di bidang pemasaran.",
-            "Memiliki kemampuan komunikasi yang baik.",
-            "Mampu bekerja sama dalam tim.",
-            "Kreatif dan memiliki inisiatif."
-        ],
-
-        companyDescription:
-            "PT Kreatif Indonesia merupakan perusahaan yang bergerak di bidang pemasaran dan layanan kreatif. Perusahaan berfokus pada kegiatan promosi dan pengembangan strategi pemasaran."
-    },
-
-    "account-executive": {
-        title: "Account Executive",
-        company: "PT Solusi Bisnis",
-        location: "Surabaya",
-        education: "S1",
-        experience: "Minimal 1 Tahun",
-        jobType: "Full-Time",
-        gender: "Semua Jenis Kelamin",
-        salaryMin: 5500000,
-        salaryMax: 8000000,
-
-        description: [
-            "PT Solusi Bisnis membuka lowongan untuk posisi Account Executive yang bertanggung jawab mengelola hubungan dengan klien dan menawarkan solusi sesuai kebutuhan mereka.",
-            "Kandidat diharapkan mampu menjaga hubungan baik dengan pelanggan, mengidentifikasi peluang kerja sama, serta mendukung pencapaian target perusahaan."
-        ],
-
-        requirements: [
-            "Pendidikan minimal S1.",
-            "Memiliki pengalaman kerja minimal 1 tahun.",
-            "Memiliki kemampuan komunikasi dan negosiasi yang baik.",
-            "Mampu membangun hubungan dengan klien.",
-            "Berorientasi pada target.",
-            "Mampu bekerja secara individu maupun tim."
-        ],
-
-        companyDescription:
-            "PT Solusi Bisnis merupakan perusahaan yang bergerak di bidang layanan bisnis dan solusi untuk pelanggan. Perusahaan berfokus pada hubungan jangka panjang dengan klien dan pengembangan layanan."
-    }
-};
-
-// FUNGSI FORMAT RUPIAH
-function formatRupiah(amount) {
-    return "Rp" + amount.toLocaleString("id-ID");
+function setText(id, value) {
+    document.getElementById(id).textContent = value;
 }
 
-// MENGAMBIL ID DARI URL
-const urlParams = new URLSearchParams(window.location.search);
-const jobId = urlParams.get("id");
+function fillList(containerId, items, tag) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    items.forEach(text => {
+        const el = document.createElement(tag);
+        el.textContent = text;
+        container.appendChild(el);
+    });
+}
 
-const job = jobData[jobId];
-
-// MENAMPILKAN DETAIL LOWONGAN
 function displayJobDetail(job) {
-    const salary =
-        formatRupiah(job.salaryMin) + " - " +
-        formatRupiah(job.salaryMax);
+    const salary = formatSalary(job.salaryMin, job.salaryMax);
+    const location = job.location || "-";
 
-    // Judul dan informasi utama
-    document.getElementById("jobTitle").textContent = job.title;
-    document.getElementById("companyName").textContent = job.company;
-    document.getElementById("jobTypeTag").textContent = job.jobType;
-    document.getElementById("locationTag").textContent = job.location;
-    document.getElementById("salaryHeader").textContent = salary;
+    setText("jobTitle", job.title);
+    setText("companyName", job.company);
+    setText("jobTypeTag", job.jobType || "-");
+    setText("locationTag", location);
+    setText("salaryHeader", salary);
 
-    // Informasi pekerjaan
-    document.getElementById("jobLocation").textContent = job.location;
-    document.getElementById("jobEducation").textContent = job.education;
-    document.getElementById("jobExperience").textContent = job.experience;
-    document.getElementById("jobType").textContent = job.jobType;
-    document.getElementById("jobGender").textContent = job.gender;
-    document.getElementById("jobSalary").textContent = salary;
+    setText("jobLocation", location);
+    setText("jobEducation", job.education || "-");
+    setText("jobExperience", formatExperience(job));
+    setText("jobType", job.jobType || "-");
+    setText("jobGender", job.gender || "Tidak ada ketentuan");
+    setText("jobSalary", salary);
 
-    // Deskripsi pekerjaan
-    const descriptionContainer =
-        document.getElementById("jobDescription");
+    // CSV hanya berisi atribut terstruktur, sehingga deskripsi disusun dari atribut tersebut
+    const description = [
+        `${job.company} membuka lowongan ${job.title} untuk penempatan di ${location}.`
+    ];
+    if (job.role) description.push(`Peran pekerjaan: ${job.role}.`);
+    if (job.updatedAt) description.push(job.updatedAt + ".");
+    if (job.closed) description.push("Lowongan ini sudah ditutup.");
+    fillList("jobDescription", description, "p");
 
-    descriptionContainer.innerHTML = "";
+    const requirements = [];
+    if (job.education) requirements.push("Pendidikan: " + job.education + ".");
+    requirements.push("Pengalaman: " + formatExperience(job) + ".");
+    requirements.push("Tipe pekerjaan: " + (job.jobType || "-") + ".");
+    if (job.gender) requirements.push("Jenis kelamin: " + job.gender + ".");
+    if (job.maxAge) requirements.push("Usia maksimal: " + job.maxAge + " tahun.");
+    fillList("jobRequirements", requirements, "li");
 
-    job.description.forEach((paragraph) => {
-        const p = document.createElement("p");
-        p.textContent = paragraph;
-        descriptionContainer.appendChild(p);
-    });
+    setText("sidebarCompany", job.company);
+    setText("sidebarPosition", job.title);
+    setText("sidebarLocation", location);
+    setText("sidebarJobType", job.jobType || "-");
 
-    // Persyaratan pekerjaan
-    const requirementContainer =
-        document.getElementById("jobRequirements");
+    const link = document.getElementById("kitalulusLink");
+    if (job.url) {
+        link.href = job.url;
+    } else {
+        link.style.display = "none";
+    }
 
-    requirementContainer.innerHTML = "";
-
-    job.requirements.forEach((requirement) => {
-        const li = document.createElement("li");
-        li.textContent = requirement;
-        requirementContainer.appendChild(li);
-    });
-
-    // Informasi perusahaan
-    document.getElementById("companyDescription").textContent =
-        job.companyDescription;
-
-    // Informasi pada sidebar
-    document.getElementById("sidebarCompany").textContent = job.company;
-    document.getElementById("sidebarPosition").textContent = job.title;
-    document.getElementById("sidebarLocation").textContent = job.location;
-    document.getElementById("sidebarJobType").textContent = job.jobType;
-
-    // Mengubah judul tab browser
     document.title = "Detail " + job.title;
 }
 
-// VALIDASI ID LOWONGAN
-if (job) {
-    displayJobDetail(job);
-} else {
-    document.getElementById("jobTitle").textContent =
-        "Lowongan Tidak Ditemukan";
-
-    document.getElementById("companyName").textContent =
-        "Silakan kembali ke daftar lowongan.";
-
+function showNotFound(message) {
+    setText("jobTitle", "Lowongan Tidak Ditemukan");
+    setText("companyName", message);
     document.querySelector(".detail-content").style.display = "none";
     document.querySelector(".detail-salary").style.display = "none";
     document.querySelector(".detail-tags").style.display = "none";
 }
+
+async function loadJob() {
+    if (!jobId) {
+        showNotFound("Silakan kembali ke daftar lowongan.");
+        return;
+    }
+    try {
+        displayJobDetail(await apiGet("/api/jobs/" + encodeURIComponent(jobId)));
+    } catch (error) {
+        showNotFound(error.status === 404 ? "Silakan kembali ke daftar lowongan." : error.message);
+    }
+}
+
+loadJob();

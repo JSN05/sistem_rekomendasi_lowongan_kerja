@@ -1,0 +1,39 @@
+# step 1
+python -m venv .venv
+
+# step 2
+.venv\Scripts\activate
+
+# jangan lupa reload dulu project visual studio codenya
+# cara reload : ctrl + shift + P
+
+# kalo muncul ini, berarti berhasil, yang muncul itu (.venv)
+# (.venv) PS C:\Users\...
+
+# step 4 instalasi library yang digunakan
+pip install fastapi>=0.110 uvicorn[standard]>=0.29 pandas>=2.0 networkx>=3.0 requests>=2.31
+
+# install ollama, install 2 GB
+ollama pull llama3.2
+# cek apa udah berhasil install
+ollama list # cek dulu list nya
+
+# run ollama, untuk jalankan AI nya
+ollama run llama3.2
+
+# step terakhir
+# sama ini, coba ke terminal backend dulu, dan ketik ini untuk jalankan server
+# masuk dulu ke project backend, supaya bisa ngambil main.py, soalnya project jalan dari sana
+uvicorn main:app --reload --port 8000
+
+# kalo sama hasilnya akan gini
+# (.venv) PS C:\Users\...> uvicorn main:app --reload --port 8000
+# INFO:     Will watch for changes in these directories: [path]
+# INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+# INFO:     Started reloader process [7840] using WatchFiles
+# INFO:     Started server process [1248]
+# INFO:     Waiting for application startup.
+# INFO preprocessing: CSV dibaca: C:\Users\...\data\lowongan_penjualan_bisnis.csv (1341 baris)
+# INFO preprocessing: Pra-pemrosesan selesai: 1341 lowongan, 30 atribut
+# INFO service: Knowledge Graph: {'nodes': 2852, 'edges': 8693, 'job': 1339, 'attribute': 1513}
+# INFO:     Application startup complete.

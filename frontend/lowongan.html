@@ -42,9 +42,6 @@
             <div class="filter-box">
                 <select id="locationFilter">
                     <option value="">Lokasi</option>
-                    <option value="jakarta">Jakarta</option>
-                    <option value="bandung">Bandung</option>
-                    <option value="surabaya">Surabaya</option>
                 </select>
 
                 <select id="educationFilter">
@@ -95,118 +92,16 @@
         <section class="job-list">
             <div class="job-list-heading">
                 <h2>Lowongan Tersedia</h2>
-                <p>Menampilkan beberapa contoh lowongan pekerjaan.</p>
+                <p id="resultInfo">Memuat lowongan...</p>
             </div>
 
             <p id="noResults" class="no-results" style="display: none;">
                 Tidak ada lowongan yang sesuai dengan kriteria pencarian Anda.
             </p>
 
-            <div class="job-container">
-                <div class="job-card"
-                    data-location="jakarta"
-                    data-education="sma/smk/sederajat"
-                    data-job-type="full time"
-                    data-experience="1"
-                    data-salary-min="5000000"
-                    data-salary-max="7000000"
-                    data-gender="semua jenis kelamin">
-                    <div class="job-card-header">
-                        <h3>Sales Executive</h3>
-                        <span class="job-type">Full Time</span>
-                    </div>
+            <div class="job-container" id="jobContainer"></div>
 
-                    <p class="company-name">PT Maju Bersama</p>
-
-                    <div class="job-info">
-                        <span>Jakarta Selatan</span>
-                        <span>SMA/SMK/Sederajat</span>
-                        <span>Pengalaman 1 Tahun</span>
-                    </div>
-
-                    <p class="job-salary">Rp5.000.000 - Rp7.000.000</p>
-
-                    <a href="detail.html?id=sales-executive" class="job-button">Lihat Detail</a>
-                </div>
-
-                <div class="job-card"
-                    data-location="jakarta"
-                    data-education="s1"
-                    data-job-type="full time"
-                    data-experience="2"
-                    data-salary-min="7000000"
-                    data-salary-max="10000000"
-                    data-gender="semua jenis kelamin">
-                    <div class="job-card-header">
-                        <h3>Business Development</h3>
-                        <span class="job-type">Full Time</span>
-                    </div>
-
-                    <p class="company-name">PT Digital Nusantara</p>
-
-                    <div class="job-info">
-                        <span>Jakarta Pusat</span>
-                        <span>S1</span>
-                        <span>Pengalaman 2 Tahun</span>
-                    </div>
-
-                    <p class="job-salary">Rp7.000.000 - Rp10.000.000</p>
-
-                    <a href="detail.html?id=business-development" class="job-button">Lihat Detail</a>
-                </div>
-
-                <div class="job-card"
-                    data-location="bandung"
-                    data-education="d3/d4"
-                    data-job-type="kontrak"
-                    data-experience="0"
-                    data-salary-min="4000000"
-                    data-salary-max="5500000"
-                    data-gender="semua jenis kelamin">
-                    <div class="job-card-header">
-                        <h3>Marketing Staff</h3>
-                        <span class="job-type">Kontrak</span>
-                    </div>
-
-                    <p class="company-name">PT Kreatif Indonesia</p>
-
-                    <div class="job-info">
-                        <span>Bandung</span>
-                        <span>D3/D4</span>
-                        <span>Fresh Graduate</span>
-                    </div>
-
-                    <p class="job-salary">Rp4.000.000 - Rp5.500.000</p>
-
-                    <a href="detail.html?id=marketing-staff" class="job-button">Lihat Detail</a>
-                </div>
-
-                <div class="job-card"
-                    data-location="surabaya"
-                    data-education="s1"
-                    data-job-type="full time"
-                    data-experience="1"
-                    data-salary-min="5500000"
-                    data-salary-max="8000000"
-                    data-gender="semua jenis kelamin">
-                    <div class="job-card-header">
-                        <h3>Account Executive</h3>
-                        <span class="job-type">Full Time</span>
-                    </div>
-
-                    <p class="company-name">PT Solusi Bisnis</p>
-
-                    <div class="job-info">
-                        <span>Surabaya</span>
-                        <span>S1</span>
-                        <span>Pengalaman 1 Tahun</span>
-                    </div>
-
-                    <p class="job-salary">Rp5.500.000 - Rp8.000.000</p>
-
-                    <a href="detail.html?id=account-executive" class="job-button">Lihat Detail</a>
-                </div>
-            </div>
+            <div class="pagination" id="pagination"></div>
         </section>
     </main>
 
@@ -217,6 +112,7 @@
         </p>
     </footer>
 
+    <script src="javascript/common.js"></script>
     <script src="javascript/lowongan.js"></script>
 </body>
 </html>

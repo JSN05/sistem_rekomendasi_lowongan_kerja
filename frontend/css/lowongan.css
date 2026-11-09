@@ -247,3 +247,24 @@
         gap: 10px;
     }
 }
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.pagination button {
+    padding: 9px 16px;
+    border: 1px solid #1e40af;
+    background-color: white;
+    color: #1e40af;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
