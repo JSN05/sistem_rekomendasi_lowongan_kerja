@@ -21,7 +21,7 @@ USE_LLM = os.getenv("USE_LLM", "1") != "0"   # USE_LLM=0 -> paksa ekstraksi berb
 
 # Aturan gaji: "min" = salary_min lowongan >= gaji minimum pengguna (sesuai paper)
 #              "max" = salary_max lowongan >= gaji minimum pengguna (lebih longgar)
-SALARY_BASIS = os.getenv("SALARY_BASIS", "min")
+SALARY_BASIS = os.getenv("SALARY_BASIS", "max")
 
 KITALULUS_JOB_URL = "https://www.kitalulus.com/lowongan/detail/{slug}"
 CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",")]

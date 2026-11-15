@@ -8,7 +8,7 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -108,9 +108,26 @@ def recommend(req: RecommendRequest):
 
 @app.get("/")
 def root():
-    return RedirectResponse("/beranda.html")
+    return FileResponse(config.FRONTEND_DIR / "beranda.html")
 
+@app.get("/beranda")
+def beranda_page():
+    return FileResponse(config.FRONTEND_DIR / "beranda.html")
+
+@app.get("/asisten")
+def asisten_page():
+    return FileResponse(config.FRONTEND_DIR / "asisten.html")
+
+@app.get("/lowongan")
+def lowongan_page():
+    return FileResponse(config.FRONTEND_DIR / "lowongan.html")
+
+@app.get("/rekomendasi")
+def rekomendasi_page():
+    return FileResponse(config.FRONTEND_DIR / "rekomendasi.html")
 
 # Sajikan frontend dari backend yang sama -> http://localhost:8000/beranda.html
 if config.FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=config.FRONTEND_DIR, html=True), name="frontend")
+
+

@@ -156,16 +156,57 @@ class JobService:
         return value
 
     # ------------------------------------------------------------ rekomendasi
+    
+
+    # ------------------------------------------------------------ rekomendasi
     def recommend(self, criteria: dict, limit: int = 20, include_closed: bool = False) -> dict:
+        # Ambil hasil ranking dari Knowledge Graph
         ranked = self.kg.recommend(criteria, include_closed)
+
+        # Hard filter berdasarkan gaji minimum pengguna
+        salary_min = criteria.get("salaryMin")
+
+        if salary_min is not None:
+            filtered = []
+
+            for r in ranked:
+                rec = self.by_id[r["job_id"]]
+                job_salary_max = rec.get("salary_max")
+
+                # Lowongan tanpa informasi gaji maksimal tidak ditampilkan
+                if job_salary_max is None:
+                    continue
+
+                # Gaji maksimal lowongan harus memenuhi harapan pengguna
+                if int(job_salary_max) >= int(salary_min):
+                    filtered.append(r)
+
+            ranked = filtered
+
+        # Siapkan hasil rekomendasi
         out = []
+
         for r in ranked[:limit]:
             job = self.to_public(self.by_id[r["job_id"]])
+
             job.update({
                 "score": r["score"],
                 "percentage": r["percentage"],
                 "flags": r["flags"],
-                "reasons": [m.REASON_TEXT[a] for a in ATTRIBUTES if r["flags"][a]],
+                "reasons": [
+                    m.REASON_TEXT[a]
+                    for a in ATTRIBUTES
+                    if r["flags"][a]
+                ],
             })
+
             out.append(job)
-        return {"total": len(ranked), "returned": len(out), "attributes": len(ATTRIBUTES), "items": out}
+
+        return {
+            "total": len(ranked),
+            "returned": len(out),
+            "attributes": len(ATTRIBUTES),
+            "items": out
+        }
+
+
