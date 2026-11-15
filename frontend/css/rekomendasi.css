@@ -92,9 +92,10 @@
 }
 
 .recommendation-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
+    align-items: stretch;
 }
 
 .recommendation-card {
@@ -102,6 +103,9 @@
     padding: 22px;
     border: 1px solid #ddd;
     border-radius: 8px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .recommendation-card-header {
@@ -116,6 +120,7 @@
     color: #2563eb;
     font-size: 19px;
     margin-bottom: 8px;
+    overflow-wrap: anywhere;
 }
 
 .company-name {
@@ -131,6 +136,7 @@
     padding: 10px 18px;
     border-radius: 6px;
     min-width: 90px;
+    flex-shrink: 0;
 }
 
 .match-score strong {
@@ -184,6 +190,12 @@
     margin-top: 6px;
 }
 
+.card-actions{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 .job-button {
     display: inline-block;
     padding: 9px 18px;
@@ -196,6 +208,17 @@
 
 .job-button:hover {
     background-color: #1d4ed8;
+}
+
+.job-button.secondary {
+    background-color: white;
+    color: #1e40af;
+    border: 1px solid #1e40af;
+}
+
+.engine-note {
+    font-size: 12px;
+    color: #777;
 }
 
 @media (max-width: 768px) {
@@ -211,6 +234,11 @@
     .criteria-container {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .recommendation-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -223,6 +251,10 @@
         gap: 10px;
     }
 
+    .recommendation-card {
+        padding: 16px;
+    }
+    
     .recommendation-card-header {
         align-items: flex-start;
     }
@@ -231,20 +263,4 @@
         min-width: 75px;
         padding: 8px 10px;
     }
-}
-.card-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.job-button.secondary {
-    background-color: white;
-    color: #1e40af;
-    border: 1px solid #1e40af;
-}
-
-.engine-note {
-    font-size: 12px;
-    color: #777;
 }

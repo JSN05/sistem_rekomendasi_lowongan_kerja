@@ -65,12 +65,17 @@ function showCriteriaSummary() {
     addMessage(
         "Terima kasih! Semua kriteria pencarian sudah lengkap.\n\n" +
         "Berikut rangkuman kebutuhan pekerjaan kamu:\n\n" + summary +
-        "\n\nKamu dapat melanjutkan ke halaman Rekomendasi, atau mengetik lagi untuk mengubah kriteria.",
+        "\n\nJika ingin mengubah kriteria pencarian, kamu cukup mengetik bagian yang ingin diubah. Tidak perlu mengulang dari awal.\n\n" +
+        "Contoh:\n" +
+        "- Ganti lokasi ke Jakarta Barat.\n" +
+        "- Ubah posisi menjadi Marketing.\n" +
+        "- Ganti gaji minimum menjadi 8 juta.\n\n" +
+        "Jika sudah sesuai, kamu dapat melanjutkan ke halaman Rekomendasi.",
         "ai"
     );
 
     const button = document.createElement("a");
-    button.href = "rekomendasi.html";
+    button.href = "/rekomendasi";
     button.textContent = "Lihat Rekomendasi Pekerjaan";
     button.classList.add("recommendation-button");
 
