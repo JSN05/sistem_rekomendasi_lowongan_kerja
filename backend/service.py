@@ -5,10 +5,12 @@ import re
 import config
 import llm
 import matching as m
+import pandas as pd
 from collections import Counter
+from pathlib import Path
 from typing import Optional
 from knowledge_graph import ATTRIBUTES, JobKnowledgeGraph
-from preprocessing import load_and_clean, to_records
+from preprocessing import to_records
 
 log = logging.getLogger("service")
 
@@ -28,19 +30,58 @@ CRITERIA_TO_ATTR = {"position": "position", "location": "location", "education":
 
 class JobService:
     def __init__(self, csv_path=None):
-        path = csv_path or config.CSV_PATH
+        path = Path(csv_path or config.PROCESSED_CSV_PATH)
+
         if not path.exists():
-            log.warning("CSV %s tidak ditemukan -> memakai data contoh %s", path, config.SAMPLE_CSV_PATH)
-            path = config.SAMPLE_CSV_PATH
+            raise FileNotFoundError(
+                f"Dataset processed tidak ditemukan: {path}"
+            )
+
         self.csv_path = path
-        self.df = load_and_clean(path)
+
+        self.df = pd.read_csv(
+            path,
+            dtype={"job_id": "string"}
+        )
+
+        if self.df.empty:
+            raise ValueError("Dataset processed kosong.")
+
+        if self.df["job_id"].isna().any():
+            raise ValueError("Terdapat job_id kosong.")
+
+        if self.df["job_id"].duplicated().any():
+            raise ValueError("Terdapat job_id duplikat.")
+
+        for col in ("is_closed", "is_highlighted"):
+            if col in self.df.columns:
+                self.df[col] = self.df[col].map(
+                    lambda v: str(v).strip().lower() in {"true", "1", "yes"}
+                    if pd.notna(v) else False
+                )
+
         self.records = to_records(self.df)
         self.by_id = {r["job_id"]: r for r in self.records}
-        self.kg = JobKnowledgeGraph(self.records, config.SALARY_BASIS)
 
-        cities = {re.sub(r"^(kota|kabupaten|kab)\s+", "", m.norm(r.get("location_city")))
-                  for r in self.records if r.get("location_city")}
+        self.kg = JobKnowledgeGraph(
+            self.records,
+            config.SALARY_BASIS
+        )
+
+        cities = {
+            re.sub(
+                r"^(kota|kabupaten|kab)\s+",
+                "",
+                m.norm(r.get("location_city"))
+            )
+            for r in self.records
+            if r.get("location_city")
+        }
+
         self.known_locations = sorted(cities, key=len, reverse=True)
+
+        log.info("Dataset aktif: %s", self.csv_path)
+        log.info("Jumlah lowongan: %s", len(self.records))
         log.info("Knowledge Graph: %s", self.kg.stats())
 
     @staticmethod

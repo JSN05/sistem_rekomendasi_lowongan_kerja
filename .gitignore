@@ -1,4 +1,16 @@
+# Python
 __pycache__/
-*__pycache__/
 *.pyc
+
+# Virtual environment
 .venv/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+
+# Raw dataset
+backend/data/raw/*.csv

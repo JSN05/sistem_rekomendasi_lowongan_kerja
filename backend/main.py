@@ -3,7 +3,7 @@ import config
 import llm
 from contextlib import asynccontextmanager
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -50,6 +50,41 @@ def health():
     s = svc()
     return {"status": "ok", "jobs": len(s.records), "csv": s.csv_path.name,
             "graph": s.kg.stats(), "ollama": llm.ollama_available(), "model": config.OLLAMA_MODEL}
+
+@app.post("/api/reload")
+def reload_dataset(x_reload_token: Optional[str] = Header(None)):
+    token = config.RELOAD_TOKEN
+
+    if not token:
+        raise HTTPException(
+            status_code=503,
+            detail="Fitur reload belum dikonfigurasi."
+        )
+
+    if x_reload_token != token:
+        raise HTTPException(
+            status_code=403,
+            detail="Token reload tidak valid."
+        )
+
+    try:
+        new_service = JobService()
+
+        state["svc"] = new_service
+
+        return {
+            "status": "success",
+            "message": "Dataset dan Knowledge Graph berhasil diperbarui.",
+            "jobs": len(new_service.records),
+            "graph": new_service.kg.stats()
+        }
+
+    except Exception:
+        logging.exception("Gagal melakukan reload dataset.")
+        raise HTTPException(
+            status_code=500,
+            detail="Reload gagal. Service aktif sebelumnya tetap digunakan."
+        )
 
 @app.get("/api/meta")
 def meta():
@@ -106,6 +141,5 @@ def rekomendasi():
 def detail():
     return FileResponse(config.FRONTEND_DIR / "detail.html")
 
-# Sajikan frontend dari backend yang sama -> http://localhost:8000/beranda.html
 if config.FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=config.FRONTEND_DIR, html=True), name="frontend")
