@@ -70,7 +70,7 @@ function showCriteriaSummary() {
     );
 
     const button = document.createElement("a");
-    button.href = "rekomendasi.html";
+    button.href = "/Rekomendasi";
     button.textContent = "Lihat Rekomendasi Pekerjaan";
     button.classList.add("recommendation-button");
 

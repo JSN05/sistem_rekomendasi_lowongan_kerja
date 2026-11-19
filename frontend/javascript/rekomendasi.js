@@ -53,7 +53,7 @@ function createRecommendationCard(job, attributeCount) {
         </div>
 
         <div class="card-actions">
-            <a href="detail.html?id=${encodeURIComponent(job.id)}" class="job-button">Lihat Lowongan</a>
+            <a href="/Detail?id=${encodeURIComponent(job.id)}" class="job-button">Lihat Lowongan</a>
             ${kitaLulusButton}
         </div>
     `;
@@ -64,7 +64,7 @@ function showMessage(text, withLink) {
     document.getElementById("recommendationContainer").innerHTML = `
         <div class="recommendation-card">
             <p>${escapeHtml(text)}</p>
-            ${withLink ? '<a href="asisten.html" class="job-button">Mulai Pencarian</a>' : ""}
+            ${withLink ? '<a href="/Asisten" class="job-button">Mulai Pencarian</a>' : ""}
         </div>
     `;
 }

@@ -1,6 +1,5 @@
 const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchButton");
-
 const locationFilter = document.getElementById("locationFilter");
 const educationFilter = document.getElementById("educationFilter");
 const experienceFilter = document.getElementById("experienceFilter");
@@ -8,7 +7,6 @@ const jobTypeFilter = document.getElementById("jobTypeFilter");
 const salaryFilter = document.getElementById("salaryFilter");
 const genderFilter = document.getElementById("genderFilter");
 const resetButton = document.getElementById("resetButton");
-
 const jobContainer = document.getElementById("jobContainer");
 const noResults = document.getElementById("noResults");
 const resultInfo = document.getElementById("resultInfo");
@@ -38,7 +36,7 @@ function createJobCard(job) {
 
         <p class="job-salary">${escapeHtml(formatSalary(job.salaryMin, job.salaryMax))}</p>
 
-        <a href="detail.html?id=${encodeURIComponent(job.id)}" class="job-button">Lihat Detail</a>
+        <a href="/Detail?id=${encodeURIComponent(job.id)}" class="job-button">Lihat Detail</a>
     `;
     return card;
 }
