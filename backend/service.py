@@ -90,7 +90,7 @@ class JobService:
                 continue
             if job_type and not m.match_job_type(job_type, r.get("job_type")):
                 continue
-            if salary_min is not None and not m.match_salary(salary_min, m.salary_reference(r, config.SALARY_BASIS)):
+            if salary_min is not None and not m.match_salary(salary_min, r.get("salary_min"),r.get("salary_max")):
                 continue
             if gender and not m.match_gender(gender, r.get("gender")):
                 continue

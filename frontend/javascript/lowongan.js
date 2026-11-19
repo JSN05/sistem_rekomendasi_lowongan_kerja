@@ -70,7 +70,9 @@ async function loadJobs(page = 1) {
             q: searchInput.value.trim(),
             location: locationFilter.value,
             education: educationFilter.value,
-            experience: experienceFilter.value,
+            experience: experienceFilter.value === ""
+                ? ""
+                : Number(experienceFilter.value),
             job_type: jobTypeFilter.value,
             salary_min: salaryFilter.value,
             gender: genderFilter.value,

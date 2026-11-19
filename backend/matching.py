@@ -2,7 +2,6 @@
 import re
 from typing import Optional
 
-
 def norm(text) -> str:
     if text is None:
         return ""
@@ -10,11 +9,9 @@ def norm(text) -> str:
     s = re.sub(r"[-_/]", " ", s)
     return re.sub(r"\s+", " ", s).strip()
 
-
-# ---------------------------------------------------------------- pendidikan
+# pendidikan
 EDU_LABELS = {1: "SD/Sederajat", 2: "SMP/Sederajat", 3: "SMA/SMK/Sederajat",
               4: "D3/D4", 5: "S1", 6: "S2", 7: "S3"}
-
 
 def education_level(text) -> Optional[int]:
     """0 = semua jenjang, 1..7 = SD..S3, None = tidak dikenali."""
@@ -33,16 +30,13 @@ def education_level(text) -> Optional[int]:
     if re.search(r"\bsd\b|sekolah dasar", t): levels.add(1)
     return min(levels) if levels else None
 
-
 def canonical_education(text) -> Optional[str]:
     level = education_level(text)
     return EDU_LABELS.get(level) if level else None
 
-
-# -------------------------------------------------------------- tipe pekerjaan
+# Tipe pekerjaan
 JOB_TYPE_LABELS = {"full time": "Full-Time", "part time": "Part-Time", "kontrak": "Kontrak",
                    "freelance": "Freelance", "magang": "Magang"}
-
 
 def canonical_job_type(text) -> str:
     t = norm(text).replace("fulltime", "full time").replace("parttime", "part time")
@@ -55,10 +49,8 @@ def canonical_job_type(text) -> str:
     if "magang" in t or "intern" in t: return "magang"
     return t
 
-
-# --------------------------------------------------------------------- gender
+# gender
 GENDER_LABELS = {"laki laki": "Laki-laki", "perempuan": "Perempuan", "semua": "Semua"}
-
 
 def canonical_gender(text, job: bool = False) -> str:
     """job=True: lowongan tanpa syarat gender dianggap terbuka untuk semua."""
@@ -73,8 +65,7 @@ def canonical_gender(text, job: bool = False) -> str:
     if has_p: return "perempuan"
     return "semua" if job else t
 
-
-# ------------------------------------------------------------ angka (gaji, dll)
+# angka (gaji, dll)
 def parse_salary(value) -> Optional[int]:
     if value is None or value == "":
         return None
@@ -94,7 +85,6 @@ def parse_salary(value) -> Optional[int]:
             return int(digits)
     return int(re.sub(r"\D", "", tokens[0])) if len(tokens) == 1 else None
 
-
 def parse_experience(value) -> Optional[int]:
     if value is None or value == "":
         return None
@@ -108,14 +98,12 @@ def parse_experience(value) -> Optional[int]:
         return int(m.group(1))
     return int(t) if re.fullmatch(r"\d+", t) else None
 
-
 def salary_reference(rec: dict, basis: str = "min") -> Optional[int]:
     """Nilai gaji lowongan yang dibandingkan dengan gaji minimum pengguna."""
     key = "salary_max" if basis == "max" else "salary_min"
     return rec.get(key)
 
-
-# ------------------------------------------------------------------ predikat
+# predikat
 POSITION_SYNONYMS = {
     "business development": ["business development", "bizdev", "biz dev"],
     "bizdev": ["business development", "bizdev", "biz dev"],
@@ -123,7 +111,6 @@ POSITION_SYNONYMS = {
     "telesales": ["telesales", "tele sales"],
     "e commerce": ["e commerce", "ecommerce"],
 }
-
 
 def match_position(user_position, job_title) -> bool:
     p, t = norm(user_position), norm(job_title)
@@ -134,43 +121,44 @@ def match_position(user_position, job_title) -> bool:
     tokens = [w for w in p.split() if len(w) > 2]
     return bool(tokens) and all(w in t for w in tokens)
 
-
 def match_location(user_location, job_location) -> bool:
     u = re.sub(r"^(di|kota|kabupaten|kab)\s+", "", norm(user_location))
     j = norm(job_location)
     return bool(u) and bool(j) and u in j
 
-
 def match_education(user_education, job_education) -> bool:
-    ul, jl = education_level(user_education), education_level(job_education)
-    if jl is None:          # persyaratan tidak diketahui
+    ul = education_level(user_education)
+    jl = education_level(job_education)
+
+    if ul == 0:
+        return True
+    if jl is None:
         return False
-    if jl == 0:             # "Semua Jenjang"
+    if jl == 0:
         return True
     return ul is not None and ul >= jl
-
 
 def match_experience(user_exp, job_exp) -> bool:
     if user_exp is None:
         return False
     return int(user_exp) >= int(job_exp or 0)
 
-
 def match_job_type(user_type, job_type) -> bool:
     u, j = canonical_job_type(user_type), canonical_job_type(job_type)
     return bool(u) and u == j
 
-
-def match_salary(user_salary, job_salary) -> bool:
-    if user_salary is None or job_salary is None:
+def match_salary(user_salary, job_salary_min, job_salary_max) -> bool:
+    if user_salary is None:
         return False
-    return int(job_salary) >= int(user_salary)
-
+    if job_salary_max is not None:
+        return int(job_salary_max) >= int(user_salary)
+    if job_salary_min is not None:
+        return int(job_salary_min) >= int(user_salary)
+    return False
 
 def match_gender(user_gender, job_gender) -> bool:
     u, j = canonical_gender(user_gender), canonical_gender(job_gender, job=True)
     return bool(u) and (u == "semua" or j == "semua" or u == j)
-
 
 REASON_TEXT = {
     "position": "Posisi pekerjaan sesuai",
