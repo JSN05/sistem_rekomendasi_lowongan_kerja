@@ -1,28 +1,24 @@
 """Knowledge Graph NetworkX (Bab 2.5 paper): user node, job node, attribute node."""
 import threading
 import uuid
-from typing import Optional
-
 import networkx as nx
-
 import matching as m
+from typing import Optional
 
 ATTRIBUTES = ["position", "location", "education", "experience", "job_type", "salary", "gender"]
 RELATIONS = {"position": "posisi", "location": "lokasi", "education": "pendidikan",
              "experience": "pengalaman", "job_type": "tipe pekerjaan", "salary": "gaji",
              "gender": "gender"}
 
-
 class JobKnowledgeGraph:
     def __init__(self, records: list[dict], salary_basis: str = "min"):
         self.G = nx.Graph()
         self.salary_basis = salary_basis
         self.job_nodes: list[str] = []
-        self._lock = threading.RLock()   # user node ditambah/dihapus sementara pada graph bersama
+        self._lock = threading.RLock()
         for rec in records:
             self._add_job(rec)
 
-    # ------------------------------------------------------------ build graph
     def _attribute_node(self, attr: str, value) -> str:
         node_id = f"{RELATIONS[attr]}:{value}"
         if node_id not in self.G:
@@ -54,7 +50,6 @@ class JobKnowledgeGraph:
         for attr, value in self._job_attribute_values(rec).items():
             self.G.add_edge(node, self._attribute_node(attr, value), relation=RELATIONS[attr])
 
-    # ------------------------------------------------------------- user node
     @staticmethod
     def _user_values(c: dict) -> dict:
         v = {}
@@ -75,7 +70,6 @@ class JobKnowledgeGraph:
                 out[data["attribute"]] = data["value"]
         return out
 
-    # ---------------------------------------------------------- matching
     @staticmethod
     def _match_flags(u: dict, j: dict) -> dict:
         return {

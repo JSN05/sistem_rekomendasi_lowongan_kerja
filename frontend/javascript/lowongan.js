@@ -14,7 +14,7 @@ const pagination = document.getElementById("pagination");
 
 const PAGE_SIZE = 12;
 let currentPage = 1;
-let requestCounter = 0;   // mengabaikan respons lama jika filter berubah cepat
+let requestCounter = 0;
 
 function createJobCard(job) {
     const card = document.createElement("div");
@@ -99,7 +99,6 @@ async function loadJobs(page = 1) {
     }
 }
 
-// Mengisi pilihan lokasi dari data lowongan yang ada di backend
 async function loadLocationOptions() {
     try {
         const meta = await apiGet("/api/meta");
@@ -110,11 +109,10 @@ async function loadLocationOptions() {
             locationFilter.appendChild(option);
         });
     } catch (error) {
-        // filter lokasi tetap kosong; daftar lowongan akan menampilkan pesan kesalahan
+        // Kosong
     }
 }
 
-// Pencarian langsung saat mengetik (ditunda sebentar agar tidak membanjiri server)
 let searchTimer = null;
 searchInput.addEventListener("input", () => {
     clearTimeout(searchTimer);

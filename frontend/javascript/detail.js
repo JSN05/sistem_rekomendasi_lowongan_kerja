@@ -31,7 +31,6 @@ function displayJobDetail(job) {
     setText("jobGender", job.gender || "Tidak ada ketentuan");
     setText("jobSalary", salary);
 
-    // CSV hanya berisi atribut terstruktur, sehingga deskripsi disusun dari atribut tersebut
     const description = [
         `${job.company} membuka lowongan ${job.title} untuk penempatan di ${location}.`
     ];

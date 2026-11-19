@@ -2,12 +2,10 @@
 import json
 import logging
 import re
-from typing import Optional
-
 import requests
-
 import config
 import matching as m
+from typing import Optional
 
 log = logging.getLogger("llm")
 
@@ -33,14 +31,11 @@ Aturan:
 3. Jika pesan berupa jawaban singkat atas pertanyaan terakhir asisten, isi kunci yang ditanyakan itu.
 4. Keluarkan JSON saja, tanpa penjelasan dan tanpa teks lain."""
 
-
-# ------------------------------------------------------------------ Ollama
 def ollama_available() -> bool:
     try:
         return requests.get(f"{config.OLLAMA_URL}/api/tags", timeout=1.5).ok
     except requests.RequestException:
         return False
-
 
 def _call_ollama(message: str, current: dict, asked: Optional[str]) -> dict:
     known = {k: v for k, v in current.items() if v is not None}
@@ -67,15 +62,12 @@ def _call_ollama(message: str, current: dict, asked: Optional[str]) -> dict:
         raise ValueError("Keluaran Llama bukan objek JSON")
     return data
 
-
-# ------------------------------------------------------- validasi keluaran
 def _clean(v):
     if v is None:
         return None
     if isinstance(v, str) and v.strip().lower() in {"", "null", "none", "n/a", "tidak ada"}:
         return None
     return v
-
 
 def sanitize(raw: dict) -> dict:
     """Validasi + normalisasi keluaran model ke format kanonik (null jika tidak valid)."""
@@ -96,15 +88,12 @@ def sanitize(raw: dict) -> dict:
     out["gender"] = m.GENDER_LABELS.get(g)
     return out
 
-
-# ------------------------------------------------------ cadangan (aturan)
 POSITION_KEYWORDS = [
     "business development", "account executive", "account manager", "sales executive",
     "sales representative", "key account", "relationship officer", "digital marketing",
     "trade marketing", "telemarketing", "telesales", "marketing", "sales", "promotor",
     "partnership", "merchant", "commercial", "retail", "e-commerce",
 ]
-
 
 def extract_with_rules(message: str, asked: Optional[str] = None,
                        known_locations: Optional[list] = None) -> dict:
@@ -128,7 +117,6 @@ def extract_with_rules(message: str, asked: Optional[str] = None,
     if re.search(r"semua|bebas|tidak ada preferensi|laki|pria|perempuan|wanita", text):
         out["gender"] = m.GENDER_LABELS.get(m.canonical_gender(text))
 
-    # jawaban singkat untuk pertanyaan yang sedang ditanyakan
     if asked and out.get(asked) is None:
         short = message.strip()
         if asked == "position" and len(short) <= 40:
@@ -139,8 +127,6 @@ def extract_with_rules(message: str, asked: Optional[str] = None,
             out["experience"] = int(short)
     return out
 
-
-# --------------------------------------------------------------- gabungan
 def extract(message: str, current: dict, asked: Optional[str],
             known_locations: Optional[list] = None) -> tuple[dict, str]:
     rules = extract_with_rules(message, asked, known_locations)
@@ -148,14 +134,12 @@ def extract(message: str, current: dict, asked: Optional[str],
         return rules, "rule-based"
     try:
         out = sanitize(_call_ollama(message, current, asked))
-    except Exception as exc:  # Ollama mati / timeout / JSON rusak
+    except Exception as exc:
         log.warning("Ekstraksi Llama gagal (%s); memakai aturan.", exc)
         return rules, "rule-based"
 
-    # angka gaji diparse deterministik: model kecil sering keliru mengonversi "juta"
     if rules.get("salaryMin") is not None:
         out["salaryMin"] = rules["salaryMin"]
-    # jawaban untuk pertanyaan yang sedang ditanyakan tidak boleh hilang
     if asked and out.get(asked) is None and rules.get(asked) is not None:
         out[asked] = rules[asked]
     return out, config.OLLAMA_MODEL

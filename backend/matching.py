@@ -9,7 +9,6 @@ def norm(text) -> str:
     s = re.sub(r"[-_/]", " ", s)
     return re.sub(r"\s+", " ", s).strip()
 
-# pendidikan
 EDU_LABELS = {1: "SD/Sederajat", 2: "SMP/Sederajat", 3: "SMA/SMK/Sederajat",
               4: "D3/D4", 5: "S1", 6: "S2", 7: "S3"}
 
@@ -34,7 +33,6 @@ def canonical_education(text) -> Optional[str]:
     level = education_level(text)
     return EDU_LABELS.get(level) if level else None
 
-# Tipe pekerjaan
 JOB_TYPE_LABELS = {"full time": "Full-Time", "part time": "Part-Time", "kontrak": "Kontrak",
                    "freelance": "Freelance", "magang": "Magang"}
 
@@ -49,7 +47,6 @@ def canonical_job_type(text) -> str:
     if "magang" in t or "intern" in t: return "magang"
     return t
 
-# gender
 GENDER_LABELS = {"laki laki": "Laki-laki", "perempuan": "Perempuan", "semua": "Semua"}
 
 def canonical_gender(text, job: bool = False) -> str:
@@ -65,7 +62,6 @@ def canonical_gender(text, job: bool = False) -> str:
     if has_p: return "perempuan"
     return "semua" if job else t
 
-# angka (gaji, dll)
 def parse_salary(value) -> Optional[int]:
     if value is None or value == "":
         return None
@@ -79,7 +75,7 @@ def parse_salary(value) -> Optional[int]:
     if m:
         return int(round(float(m.group(1).replace(",", ".")) * 1_000))
     tokens = re.findall(r"\d[\d.,]*\d|\d", t)
-    for tok in tokens:                      # ambil angka >= 6 digit ("Rp5.000.000")
+    for tok in tokens:
         digits = re.sub(r"\D", "", tok)
         if len(digits) >= 6:
             return int(digits)
@@ -103,7 +99,6 @@ def salary_reference(rec: dict, basis: str = "min") -> Optional[int]:
     key = "salary_max" if basis == "max" else "salary_min"
     return rec.get(key)
 
-# predikat
 POSITION_SYNONYMS = {
     "business development": ["business development", "bizdev", "biz dev"],
     "bizdev": ["business development", "bizdev", "biz dev"],

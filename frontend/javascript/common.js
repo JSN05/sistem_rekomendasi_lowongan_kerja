@@ -1,6 +1,3 @@
-// Konfigurasi + fungsi bersama untuk semua halaman.
-// Jika frontend dibuka dari server backend (http://localhost:8000/...) alamat API otomatis sama;
-// jika dibuka dari server lain (Live Server, file://) alamat default http://localhost:8000.
 const API_BASE = (location.protocol.startsWith("http") && location.port === "8000")
     ? ""
     : "http://localhost:8000";
@@ -45,7 +42,6 @@ function apiPost(path, body) {
     return apiRequest(path, { method: "POST", body: JSON.stringify(body) });
 }
 
-// Mencegah XSS karena data lowongan berasal dari hasil scraping
 function escapeHtml(value) {
     return String(value ?? "").replace(/[&<>"']/g, ch => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"

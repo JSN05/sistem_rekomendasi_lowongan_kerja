@@ -1,4 +1,3 @@
-// Kriteria disimpan oleh halaman Asisten AI
 const criteria = JSON.parse(localStorage.getItem("jobSearchCriteria"));
 
 function displayCriteria() {
@@ -77,7 +76,6 @@ async function displayRecommendations() {
     container.innerHTML = "";
 
     try {
-        // Backend membangun Knowledge Graph, menghitung skor 7 atribut, dan mengurutkan lowongan
         const data = await apiPost("/api/recommend", { criteria, limit: 20 });
 
         data.items.forEach(job => container.appendChild(createRecommendationCard(job, data.attributes)));

@@ -3,14 +3,11 @@ const userInput = document.getElementById("userInput");
 const chatMessages = document.getElementById("chatMessages");
 const sendButton = chatForm.querySelector("button");
 
-// Kriteria pencarian (null = belum diketahui). Kunci sama dengan API backend.
 let criteria = {
     position: null, location: null, education: null, experience: null,
     jobType: null, salaryMin: null, gender: null
 };
 
-// Atribut yang sedang ditanyakan asisten (dikirim ke backend agar jawaban singkat
-// seperti "1 tahun" atau "5 juta" dipahami sesuai konteks pertanyaan)
 let asked = null;
 
 const criteriaLabels = {
@@ -59,7 +56,6 @@ function showCriteriaSummary() {
         })
         .join("\n");
 
-    // Disimpan untuk halaman Rekomendasi
     localStorage.setItem("jobSearchCriteria", JSON.stringify(criteria));
 
     addMessage(
@@ -94,7 +90,6 @@ chatForm.addEventListener("submit", async function (event) {
     const typing = addMessage("Sedang memproses...", "ai");
 
     try {
-        // Backend: Llama 3.2 mengekstraksi 7 atribut, lalu menentukan pertanyaan berikutnya
         const result = await apiPost("/api/chat", { message, criteria, asked });
 
         typing.remove();

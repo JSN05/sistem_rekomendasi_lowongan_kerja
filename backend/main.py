@@ -1,4 +1,6 @@
 import logging
+import config
+import llm
 from contextlib import asynccontextmanager
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Query
@@ -6,8 +8,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
-import config
-import llm
 from service import JobService
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -26,7 +26,6 @@ app.add_middleware(CORSMiddleware, allow_origins=config.CORS_ORIGINS,
 def svc() -> JobService:
     return state["svc"]
 
-# Nama field memakai camelCase agar sama persis dengan kunci di frontend.
 class Criteria(BaseModel):
     position: Optional[str] = None
     location: Optional[str] = None

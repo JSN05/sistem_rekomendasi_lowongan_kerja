@@ -2,12 +2,11 @@
 import logging
 import math
 import re
-from collections import Counter
-from typing import Optional
-
 import config
 import llm
 import matching as m
+from collections import Counter
+from typing import Optional
 from knowledge_graph import ATTRIBUTES, JobKnowledgeGraph
 from preprocessing import load_and_clean, to_records
 
@@ -41,10 +40,9 @@ class JobService:
 
         cities = {re.sub(r"^(kota|kabupaten|kab)\s+", "", m.norm(r.get("location_city")))
                   for r in self.records if r.get("location_city")}
-        self.known_locations = sorted(cities, key=len, reverse=True)  # frasa terpanjang dicoba dulu
+        self.known_locations = sorted(cities, key=len, reverse=True)
         log.info("Knowledge Graph: %s", self.kg.stats())
 
-    # ------------------------------------------------------------ serialisasi
     @staticmethod
     def to_public(rec: dict) -> dict:
         city, prov = rec.get("location_city_raw"), rec.get("location_province_raw")
@@ -72,7 +70,6 @@ class JobService:
             "url": config.KITALULUS_JOB_URL.format(slug=slug) if slug else None,
         }
 
-    # ------------------------------------------------------------ daftar lowongan
     def list_jobs(self, q="", location="", education="", experience=None, job_type="",
                   salary_min=None, gender="", include_closed=False, page=1, page_size=12) -> dict:
         q, loc = m.norm(q), m.norm(location)
@@ -123,7 +120,6 @@ class JobService:
             "jobTypes": sorted(({"value": k, "label": v} for k, v in types.items()), key=lambda x: x["label"] or ""),
         }
 
-    # ----------------------------------------------------------------- asisten
     @staticmethod
     def missing(criteria: dict) -> list:
         return [k for k in llm.ORDER if criteria.get(k) is None or criteria.get(k) == ""]
@@ -155,7 +151,6 @@ class JobService:
             return f"{value} tahun"
         return value
 
-    # ------------------------------------------------------------ rekomendasi
     def recommend(self, criteria: dict, limit: int = 20, include_closed: bool = False) -> dict:
         ranked = self.kg.recommend(criteria, include_closed)
         out = []
