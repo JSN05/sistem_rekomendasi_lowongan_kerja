@@ -7,7 +7,6 @@ import requests
 import config
 from pathlib import Path
 
-# Konfigurasi scraping
 URL = "https://gql.kitalulus.com/graphql"
 MAX_DATA = 2000
 LIMIT_PER_PAGE = 30
@@ -29,8 +28,6 @@ logging.basicConfig(
 
 log = logging.getLogger("scraper")
 
-
-# Query GraphQL
 QUERY = """
 fragment VacancyCardFragment on Vacancy {
   id
@@ -90,7 +87,6 @@ query Vacancies(
   }
 }
 """
-
 
 FILTERS = [
     {"key": "sortBy", "value": ["isHighlighted"]},
@@ -171,7 +167,6 @@ def fetch_page(session, page):
 
     return jobs, has_next_page
 
-
 def scrape_jobs():
     """Mengambil seluruh lowongan yang sesuai dengan keyword."""
 
@@ -232,7 +227,6 @@ def scrape_jobs():
 
     return all_jobs
 
-
 def transform_jobs(all_jobs):
     """Mengubah respons GraphQL menjadi DataFrame."""
 
@@ -271,7 +265,6 @@ def transform_jobs(all_jobs):
 
     df = df.drop_duplicates(subset="job_id")
 
-    # Validasi data sebelum disimpan
     df = df.dropna(subset=["job_id"])
 
     if df.empty:
@@ -282,14 +275,12 @@ def transform_jobs(all_jobs):
 
     return df
 
-
 def save_dataset(df, output_file=OUTPUT_FILE):
     """Menyimpan CSV dengan pengamanan terhadap kegagalan penulisan."""
 
     output_file = Path(output_file)
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
-    # Tulis ke file sementara terlebih dahulu.
     temp_file = output_file.with_name(
         output_file.stem + ".tmp" + output_file.suffix
     )
@@ -301,7 +292,6 @@ def save_dataset(df, output_file=OUTPUT_FILE):
             encoding="utf-8-sig"
         )
 
-        # Mengganti dataset lama hanya setelah file baru berhasil ditulis.
         temp_file.replace(output_file)
 
     finally:
@@ -310,7 +300,6 @@ def save_dataset(df, output_file=OUTPUT_FILE):
 
     log.info("Dataset berhasil disimpan: %s", output_file)
     log.info("Total data tersimpan: %s", len(df))
-
 
 def main():
     try:
