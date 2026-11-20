@@ -1,6 +1,6 @@
 # Sistem Rekomendasi Lowongan Kerja
 
-Sistem rekomendasi lowongan kerja berbasis **Large Language Model (LLM)** dan **Knowledge Graph**.
+Sistem rekomendasi lowongan kerja berbasis **Large Language Model (LLM)** dan **Knowledge Graph** untuk bidang penjualan dan bisnis.
 
 ## 1. Persiapan Environment
 
@@ -56,6 +56,15 @@ ollama run llama3.2
 
 Pastikan Ollama berjalan agar fitur AI pada aplikasi dapat digunakan.
 
+**Mengakhiri sesi Ollama:**
+
+Untuk keluar dari sesi interaktif Llama 3.2, gunakan salah satu cara berikut:
+
+- Ketik `/bye`, kemudian tekan `Enter`.
+- Tekan `Ctrl + D` pada terminal yang mendukung perintah EOF.
+
+**Catatan:** Perintah `/bye` digunakan untuk keluar dari sesi interaktif Ollama. Layanan Ollama mungkin tetap berjalan di latar belakang.
+
 ## 4. Menjalankan Backend
 
 Buka terminal baru di Visual Studio Code, kemudian masuk ke folder `backend`:
@@ -79,15 +88,15 @@ uvicorn main:app --reload --port 8000
 Jika berhasil, terminal akan menampilkan informasi seperti berikut:
 
 ```text
-INFO:     Will watch for changes in these directories: [...]
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [...] using WatchFiles
-INFO:     Started server process [...]
-INFO:     Waiting for application startup.
+INFO: Will watch for changes in these directories: [...]
+INFO: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO: Started reloader process [...] using WatchFiles
+INFO: Started server process [...]
+INFO: Waiting for application startup.
 INFO preprocessing: CSV dibaca: ...\data\lowongan_penjualan_bisnis.csv (1341 baris)
 INFO preprocessing: Pra-pemrosesan selesai: 1341 lowongan, 30 atribut
 INFO service: Knowledge Graph: {'nodes': 2852, 'edges': 8693, 'job': 1339, 'attribute': 1513}
-INFO:     Application startup complete.
+INFO: Application startup complete.
 ```
 
 ## 5. Mengakses Aplikasi
@@ -96,8 +105,19 @@ Setelah server berhasil dijalankan, buka browser dan akses:
 
 **Aplikasi:** http://127.0.0.1:8000/
 
-Untuk menghentikan server, tekan `CTRL + C` pada terminal.
+## 6. Menghentikan Backend
+
+Untuk menghentikan server FastAPI, tekan:
+
+```text
+CTRL + C
+```
+
+pada terminal tempat backend sedang berjalan.
 
 ---
 
-**Catatan:** Jalankan backend dari folder `backend` agar Python dapat menemukan `main.py` dan konfigurasi project dengan benar.
+**Catatan:**
+- Jalankan backend dari folder `backend` agar Python dapat menemukan `main.py` dan konfigurasi project dengan benar.
+- Pastikan Ollama dan model Llama 3.2 tersedia ketika menggunakan fitur AI.
+- Virtual environment harus diaktifkan sebelum menjalankan backend.

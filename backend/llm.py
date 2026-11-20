@@ -15,21 +15,37 @@ LABELS = {"position": "Posisi Pekerjaan", "location": "Lokasi", "education": "Pe
           "gender": "Jenis Kelamin"}
 
 SYSTEM_PROMPT = """Kamu adalah modul ekstraksi informasi untuk sistem rekomendasi lowongan kerja bidang penjualan dan bisnis.
-Tugasmu HANYA mengubah pesan pengguna menjadi JSON dengan tepat 7 kunci berikut:
+Tugasmu adalah mengekstrak informasi dari pesan terbaru pengguna menjadi JSON dengan tepat 7 kunci berikut:
 
-- "position"  : posisi yang dicari, huruf kecil (contoh: "sales", "marketing", "business development")
-- "location"  : nama kota/daerah, huruf kecil (contoh: "tangerang", "jakarta selatan")
-- "education" : salah satu dari "SD/Sederajat", "SMP/Sederajat", "SMA/SMK/Sederajat", "D3/D4", "S1", "S2", "S3"
-- "experience": bilangan bulat, pengalaman dalam tahun ("fresh graduate", "belum berpengalaman" -> 0)
-- "jobType"   : salah satu dari "Full-Time", "Part-Time", "Kontrak", "Freelance", "Magang"
-- "salaryMin" : bilangan bulat dalam rupiah ("5 juta" -> 5000000, "Rp3.500.000" -> 3500000)
-- "gender"    : salah satu dari "Laki-laki", "Perempuan", "Semua" ("Semua" jika pengguna tidak punya preferensi)
+- "position": posisi pekerjaan yang dicari, huruf kecil.
+  Contoh: "sales", "sales manager", "marketing", "business development".
+- "location": nama kota atau daerah, huruf kecil.
+  Contoh: "jakarta", "bandung", "jakarta selatan".
+- "education": salah satu dari "SD/Sederajat", "SMP/Sederajat", "SMA/SMK/Sederajat", "D3/D4", "S1", "S2", "S3".
+- "experience": bilangan bulat dalam tahun. "fresh graduate" atau "belum berpengalaman" berarti 0.
+- "jobType": salah satu dari "Full-Time", "Part-Time", "Kontrak", "Freelance", "Magang".
+- "salaryMin": bilangan bulat dalam rupiah. Contoh: "5 juta" berarti 5000000.
+- "gender": salah satu dari "Laki-laki", "Perempuan", "Semua".
 
-Aturan:
-1. Isi nilai HANYA dari informasi yang disebutkan pengguna pada pesan terbaru.
-2. Jika suatu informasi tidak disebutkan, isi dengan null. JANGAN menebak.
-3. Jika pesan berupa jawaban singkat atas pertanyaan terakhir asisten, isi kunci yang ditanyakan itu.
-4. Keluarkan JSON saja, tanpa penjelasan dan tanpa teks lain."""
+ATURAN EKSTRAKSI:
+
+1. Ekstrak hanya informasi yang disebutkan atau dapat dipahami secara jelas dari pesan TERBARU pengguna.
+2. Jika informasi tidak disebutkan, isi dengan null. Jangan menebak atau menyalin nilai lama dari informasi yang sudah diketahui.
+3. Jika pengguna memberikan informasi baru untuk kriteria yang sudah pernah diisi, keluarkan nilai baru tersebut. Nilai baru akan menggantikan nilai sebelumnya.
+4. Kenali instruksi perubahan seperti:
+   - "Ganti lokasi saya menjadi Bandung."
+   - "Saya ingin posisi Marketing, bukan Sales."
+   - "Ubah gaji minimum menjadi 7 juta."
+   - "Sekarang saya ingin pekerjaan Full-Time."
+5. Jika pengguna menjawab pertanyaan terakhir asisten secara singkat, masukkan jawabannya ke kunci yang sedang ditanyakan.
+6. Jika pengguna menyebutkan beberapa kriteria sekaligus, ekstrak semuanya.
+7. Jangan mengubah kriteria yang tidak disebutkan pengguna.
+8. Jangan menganggap pengguna ingin memulai pencarian baru hanya karena memberikan perubahan kriteria.
+9. Jika pengguna secara eksplisit tidak memiliki preferensi gender, gunakan "Semua".
+10. Jika informasi tidak cukup jelas untuk menentukan nilai, gunakan null.
+
+Keluarkan JSON valid dengan tepat 7 kunci tersebut.
+Jangan berikan penjelasan, Markdown, atau teks lain di luar JSON."""
 
 def ollama_available() -> bool:
     try:
@@ -40,9 +56,17 @@ def ollama_available() -> bool:
 def _call_ollama(message: str, current: dict, asked: Optional[str]) -> dict:
     known = {k: v for k, v in current.items() if v is not None}
     user_prompt = (
-        f"Informasi yang sudah diketahui: {json.dumps(known, ensure_ascii=False)}\n"
-        f"Pertanyaan terakhir asisten: {LABELS.get(asked, '(tidak ada)')}\n"
-        f'Pesan pengguna: "{message}"\n\nKeluarkan JSON dengan 7 kunci.'
+        f"Kriteria yang saat ini tersimpan: "
+        f"{json.dumps(known, ensure_ascii=False)}\n"
+        f"Pertanyaan terakhir asisten: "
+        f"{LABELS.get(asked, '(tidak ada)')}\n"
+        f"Pesan terbaru pengguna: \"{message}\"\n\n"
+        "Ekstrak hanya informasi baru atau perubahan yang disebutkan "
+        "dalam pesan terbaru pengguna.\n"
+        "Jika pengguna mengubah kriteria lama, keluarkan nilai barunya.\n"
+        "Jika tidak ada informasi baru untuk suatu kriteria, isi null.\n"
+        "Jangan menyalin nilai lama.\n\n"
+        "Keluarkan JSON dengan tepat 7 kunci."
     )
     resp = requests.post(
         f"{config.OLLAMA_URL}/api/chat",
@@ -100,21 +124,60 @@ def extract_with_rules(message: str, asked: Optional[str] = None,
     text = m.norm(message)
     out = {k: None for k in ORDER}
 
-    out["position"] = next((p for p in POSITION_KEYWORDS if m.norm(p) in text), None)
+    out["position"] = next(
+        (p for p in POSITION_KEYWORDS if m.norm(p) in text),
+        None
+    )
 
     for loc in known_locations or []:
-        if re.search(rf"\b{re.escape(loc)}\b", text):
-            out["location"] = loc
+        loc_norm = m.norm(loc)
+        if re.search(rf"\b{re.escape(loc_norm)}\b", text):
+            out["location"] = loc_norm
             break
 
+    if out["location"] is None:
+        location_match = re.search(
+            r"\b(?:di|kota|daerah|wilayah)\s+"
+            r"([a-z]+(?:\s+[a-z]+){0,2})",
+            text
+        )
+
+        if location_match:
+            candidate = location_match.group(1).strip()
+
+            candidate = re.split(
+                r"\b(?:dengan|dan|gaji|pendidikan|pengalaman|"
+                r"jenis|kelamin|tipe|pekerjaan|minimal)\b",
+                candidate
+            )[0].strip()
+
+            if candidate:
+                out["location"] = candidate
+
     out["education"] = m.canonical_education(text)
-    out["experience"] = m.parse_experience(text) if re.search(
-        r"\d+\s*(tahun|thn)|fresh graduate|belum|tanpa pengalaman", text) else None
+
+    out["experience"] = (
+        m.parse_experience(text)
+        if re.search(
+            r"\d+\s*(tahun|thn)|fresh graduate|belum|tanpa pengalaman",
+            text
+        )
+        else None
+    )
+
     jt = m.canonical_job_type(text)
-    out["jobType"] = m.JOB_TYPE_LABELS.get(jt)   # None jika tidak ada kata kunci tipe pekerjaan
-    if re.search(r"(juta|jt|ribu|rb)\b|\d{6,}", message.lower().replace(".", "")):
+    out["jobType"] = m.JOB_TYPE_LABELS.get(jt)
+
+    if re.search(
+        r"(juta|jt|ribu|rb)\b|\d{6,}",
+        message.lower().replace(".", "")
+    ):
         out["salaryMin"] = m.parse_salary(message.lower())
-    if re.search(r"semua|bebas|tidak ada preferensi|laki|pria|perempuan|wanita", text):
+
+    if re.search(
+        r"semua|bebas|tidak ada preferensi|laki|pria|perempuan|wanita",
+        text
+    ):
         out["gender"] = m.GENDER_LABELS.get(m.canonical_gender(text))
 
     if asked and out.get(asked) is None:
@@ -138,8 +201,7 @@ def extract(message: str, current: dict, asked: Optional[str],
         log.warning("Ekstraksi Llama gagal (%s); memakai aturan.", exc)
         return rules, "rule-based"
 
-    if rules.get("salaryMin") is not None:
-        out["salaryMin"] = rules["salaryMin"]
-    if asked and out.get(asked) is None and rules.get(asked) is not None:
-        out[asked] = rules[asked]
+    for key in ORDER:
+        if out.get(key) is None and rules.get(key) is not None:
+            out[key] = rules[key]
     return out, config.OLLAMA_MODEL
