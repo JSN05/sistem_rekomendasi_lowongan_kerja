@@ -1,5 +1,5 @@
 .recommendation-page {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
@@ -91,36 +91,50 @@
     font-size: 14px;
 }
 
+/* GRID REKOMENDASI */
 .recommendation-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
+    align-items: stretch;
 }
 
 .recommendation-card {
     background-color: white;
-    padding: 22px;
+    padding: 18px;
     border: 1px solid #ddd;
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.recommendation-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
 }
 
 .recommendation-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 15px;
+    align-items: flex-start;
+    gap: 10px;
     margin-bottom: 15px;
 }
 
 .recommendation-card h3 {
     color: #2563eb;
-    font-size: 19px;
+    font-size: 17px;
+    line-height: 1.4;
     margin-bottom: 8px;
+    overflow-wrap: anywhere;
 }
 
 .company-name {
     color: #444;
-    font-size: 15px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
 }
 
 .match-score {
@@ -128,80 +142,116 @@
     flex-direction: column;
     align-items: center;
     background-color: #eaf1ff;
-    padding: 10px 18px;
+    padding: 9px 12px;
     border-radius: 6px;
-    min-width: 90px;
+    min-width: 78px;
+    flex-shrink: 0;
 }
 
 .match-score strong {
     color: #2563eb;
-    font-size: 22px;
+    font-size: 19px;
 }
 
 .match-score span {
     color: #555;
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .job-info {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 7px;
+    margin-bottom: 13px;
 }
 
 .job-info span {
     color: #666;
     background-color: #f1f5f9;
-    padding: 7px 10px;
+    padding: 6px 8px;
     border-radius: 5px;
-    font-size: 13px;
+    font-size: 12px;
+    overflow-wrap: anywhere;
 }
 
 .job-salary {
     color: #1e3a8a;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: bold;
-    margin-bottom: 18px;
+    margin-bottom: 15px;
+    overflow-wrap: anywhere;
 }
 
 .match-reason {
     background-color: #f5f7fa;
-    padding: 13px;
+    padding: 12px;
     border-radius: 6px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
+    flex-grow: 1;
 }
 
 .match-reason strong {
     color: #333;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .match-reason p {
     color: #666;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.6;
     margin-top: 6px;
+    overflow-wrap: anywhere;
+}
+
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
 }
 
 .job-button {
     display: inline-block;
-    padding: 9px 18px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
     background-color: #2563eb;
     color: white;
     text-decoration: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 13px;
+    text-align: center;
+    transition: background-color 0.2s ease;
 }
 
 .job-button:hover {
     background-color: #1d4ed8;
 }
 
-@media (max-width: 768px) {
-    .recommendation-page {
-        margin-top: 25px;
-        padding: 0 12px;
+.job-button.secondary {
+    background-color: white;
+    color: #1e40af;
+    border: 1px solid #1e40af;
+}
+
+.job-button.secondary:hover {
+    background-color: #eaf1ff;
+}
+
+.engine-note {
+    font-size: 12px;
+    color: #777;
+}
+
+@media (min-width: 1801px) {
+    .recommendation-container {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1000px) {
+    .recommendation-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .recommendation-heading h1 {
@@ -211,10 +261,18 @@
     .criteria-container {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .recommendation-card {
+        padding: 16px;
+    }
+
+    .recommendation-card h3 {
+        font-size: 18px;
+    }
 }
 
-@media (max-width: 480px) {
-    .criteria-container {
+@media (max-width: 600px) {
+    .recommendation-container {
         grid-template-columns: 1fr;
     }
 
@@ -231,20 +289,4 @@
         min-width: 75px;
         padding: 8px 10px;
     }
-}
-.card-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.job-button.secondary {
-    background-color: white;
-    color: #1e40af;
-    border: 1px solid #1e40af;
-}
-
-.engine-note {
-    font-size: 12px;
-    color: #777;
 }

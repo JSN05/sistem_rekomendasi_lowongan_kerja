@@ -6,9 +6,17 @@ import matching as m
 from typing import Optional
 
 ATTRIBUTES = ["position", "location", "education", "experience", "job_type", "salary", "gender"]
-RELATIONS = {"position": "posisi", "location": "lokasi", "education": "pendidikan",
-             "experience": "pengalaman", "job_type": "tipe pekerjaan", "salary": "gaji",
-             "gender": "gender"}
+RELATIONS = {""
+    "position": "posisi",
+    "location": "lokasi",
+    "education": "pendidikan",
+    "experience": "pengalaman",
+    "job_type": "tipe pekerjaan",
+    "salary": "gaji",
+    "salary_min": "gaji minimum",
+    "salary_max": "gaji maksimum",
+    "gender": "gender"
+}
 
 class JobKnowledgeGraph:
     def __init__(self, records: list[dict], salary_basis: str = "min"):
@@ -34,9 +42,12 @@ class JobKnowledgeGraph:
             "experience": rec.get("experience") if rec.get("experience") is not None else 0,
             "job_type": rec.get("job_type"),
             "salary": m.salary_reference(rec, self.salary_basis),
+            "salary_min": rec.get("salary_min"),
+            "salary_max": rec.get("salary_max"),
             "gender": m.canonical_gender(rec.get("gender"), job=True),
         }
-        return {k: v for k, v in values.items() if v not in (None, "")}
+
+        return {k: v for k, v in values.items() if v is not None and v != ""}
 
     def _add_job(self, rec: dict) -> None:
         node = f"job:{rec['job_id']}"
@@ -78,7 +89,7 @@ class JobKnowledgeGraph:
             "education": m.match_education(u.get("education"), j.get("education")),
             "experience": m.match_experience(u.get("experience"), j.get("experience")),
             "job_type": m.match_job_type(u.get("job_type"), j.get("job_type")),
-            "salary": m.match_salary(u.get("salary"), j.get("salary")),
+            "salary": m.match_salary(u.get("salary"),j.get("salary_min"),j.get("salary_max")),
             "gender": m.match_gender(u.get("gender"), j.get("gender")),
         }
 
