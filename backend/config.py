@@ -27,13 +27,6 @@ PROCESSED_CSV_PATH = Path(
 
 SAMPLE_CSV_PATH = DATA_DIR / "sample_lowongan.csv"
 
-CSV_PATH = Path(
-    os.getenv(
-        "CSV_PATH",
-        str(DATA_DIR / "lowongan_penjualan_bisnis.csv")
-    )
-)
-
 # Frontend
 FRONTEND_DIR = Path(
     os.getenv("FRONTEND_DIR", str(BASE_DIR.parent / "frontend"))
